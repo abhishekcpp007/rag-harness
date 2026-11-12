@@ -1,0 +1,249 @@
+# Golden set for rag-harness.
+#
+# kind is only there so the report can slice the score. `identifier` questions are the ones that
+# punish a dense-only index. `semantic` questions share almost no vocabulary with the document and
+# punish a sparse-only index. `unanswerable` questions have no answer anywhere in the corpus, and
+# the only correct behaviour is to abstain.
+
+- id: id-01
+  gold_chunks: [03-error-codes#1, 03-error-codes#3]
+  kind: identifier
+  question: What does NW-4021 mean?
+  gold_docs: [03-error-codes, 06-runbook-settlement-stall]
+  must_contain: ["batch"]
+- id: id-02
+  gold_chunks: [03-error-codes#3, 03-error-codes#2]
+  kind: identifier
+  question: I got NW-5001 back, should I retry the charge?
+  gold_docs: [03-error-codes]
+  must_contain: ["poll"]
+- id: id-03
+  gold_chunks: [03-error-codes#1]
+  kind: identifier
+  question: What is error 4090?
+  gold_docs: [03-error-codes]
+  must_contain: ["idempotency"]
+- id: id-04
+  gold_chunks: [03-error-codes#1]
+  kind: identifier
+  question: Which code comes back when an API key has been revoked?
+  gold_docs: [03-error-codes]
+  must_contain: ["revoked"]
+- id: id-05
+  gold_chunks: [10-sandbox-testing#1]
+  kind: identifier
+  question: Which test card number produces an acquirer timeout?
+  gold_docs: [10-sandbox-testing]
+  must_contain: ["0119"]
+- id: id-06
+  gold_chunks: [03-error-codes#1]
+  kind: identifier
+  question: What does NW-4013 tell me is missing?
+  gold_docs: [03-error-codes]
+  must_contain: ["scope"]
+
+- id: sem-01
+  gold_chunks: [05-settlement#0, 12-glossary#1]
+  kind: semantic
+  question: Why can I not have my money sooner than two days after a sale?
+  gold_docs: [05-settlement, 12-glossary]
+  must_contain: ["business day"]
+- id: sem-02
+  gold_chunks: [09-payouts#3]
+  kind: semantic
+  question: The receiving bank sent my transfer back, what happens to the money now?
+  gold_docs: [09-payouts]
+  must_contain: ["balance"]
+- id: sem-03
+  gold_chunks: [04-webhooks#2]
+  kind: semantic
+  question: Our listener keeps getting the same message more than once
+  gold_docs: [04-webhooks]
+  must_contain: ["once"]
+- id: sem-04
+  gold_chunks: [04-webhooks#1]
+  kind: semantic
+  question: Someone could record our callback and send it again later, how do we stop that
+  gold_docs: [04-webhooks]
+  must_contain: ["minutes"]
+- id: sem-05
+  gold_chunks: [07-refunds-and-disputes#1]
+  kind: semantic
+  question: A buyer says the goods never arrived and their bank took the money back
+  gold_docs: [07-refunds-and-disputes]
+  must_contain: ["dispute"]
+- id: sem-06
+  gold_chunks: [07-refunds-and-disputes#1]
+  kind: semantic
+  question: How long do I have to push back before I automatically lose?
+  gold_docs: [07-refunds-and-disputes]
+  must_contain: ["7"]
+- id: sem-07
+  gold_chunks: [01-platform-overview#4]
+  kind: semantic
+  question: Can we move a merchant from Mumbai over to Singapore?
+  gold_docs: [01-platform-overview]
+  must_contain: ["region"]
+- id: sem-08
+  gold_chunks: [01-platform-overview#1]
+  kind: semantic
+  question: Which part of the system is allowed to change a balance?
+  gold_docs: [01-platform-overview]
+  must_contain: ["ledger"]
+- id: sem-09
+  gold_chunks: [02-charges-api#1]
+  kind: semantic
+  question: What stops a double tap on the pay button from charging twice?
+  gold_docs: [02-charges-api]
+  must_contain: ["idempotency"]
+
+- id: proc-01
+  gold_chunks: [06-runbook-settlement-stall#1, 06-runbook-settlement-stall#2]
+  kind: procedural
+  question: A batch has been submitted for two hours, what is the first thing I check?
+  gold_docs: [06-runbook-settlement-stall]
+  must_contain: ["acquirer"]
+- id: proc-02
+  gold_chunks: [06-runbook-settlement-stall#2]
+  kind: procedural
+  question: When do I page the settlement on-call?
+  gold_docs: [06-runbook-settlement-stall]
+  must_contain: ["two"]
+- id: proc-03
+  gold_chunks: [07-refunds-and-disputes#0]
+  kind: procedural
+  question: How do I return only part of a payment to the customer?
+  gold_docs: [07-refunds-and-disputes]
+  must_contain: ["partial"]
+- id: proc-04
+  gold_chunks: [08-rate-limits#1]
+  kind: procedural
+  question: How should a client back off after a 429?
+  gold_docs: [08-rate-limits]
+  must_contain: ["jitter"]
+- id: proc-05
+  gold_chunks: [10-sandbox-testing#2]
+  kind: procedural
+  question: How do I force a charge into the disputed state while testing?
+  gold_docs: [10-sandbox-testing]
+  must_contain: ["advance"]
+- id: proc-06
+  gold_chunks: [05-settlement#4]
+  kind: procedural
+  question: Reconciliation reported a break over 1000 rupees, who gets woken up?
+  gold_docs: [05-settlement]
+  must_contain: ["on-call"]
+- id: proc-07
+  gold_chunks: [09-payouts#1]
+  kind: procedural
+  question: How do I register a new payee before sending them money?
+  gold_docs: [09-payouts]
+  must_contain: ["beneficiar"]
+- id: proc-08
+  gold_chunks: [11-onboarding-and-kyc#1]
+  kind: procedural
+  question: What documents does a private limited company have to submit?
+  gold_docs: [11-onboarding-and-kyc]
+  must_contain: ["PAN"]
+
+- id: fact-01
+  gold_chunks: [05-settlement#1]
+  kind: factual
+  question: What time does the settlement sweep run in India?
+  gold_docs: [05-settlement]
+  must_contain: ["23:40"]
+- id: fact-02
+  gold_chunks: [08-rate-limits#0]
+  kind: factual
+  question: How many writes per minute does the standard tier allow?
+  gold_docs: [08-rate-limits]
+  must_contain: ["300"]
+- id: fact-03
+  gold_chunks: [02-charges-api#4]
+  kind: factual
+  question: What is the biggest page size when listing charges?
+  gold_docs: [02-charges-api]
+  must_contain: ["100"]
+- id: fact-04
+  gold_chunks: [02-charges-api#2, 12-glossary#0]
+  kind: factual
+  question: How long does an authorisation last before it expires?
+  gold_docs: [02-charges-api, 12-glossary]
+  must_contain: ["7 days"]
+- id: fact-05
+  gold_chunks: [12-glossary#0, 01-platform-overview#0]
+  kind: factual
+  question: Which bank is the acquirer in Singapore?
+  gold_docs: [12-glossary, 01-platform-overview]
+  must_contain: ["DBS"]
+- id: fact-06
+  gold_chunks: [01-platform-overview#1]
+  kind: factual
+  question: What language is the ledger service written in?
+  gold_docs: [01-platform-overview]
+  must_contain: ["Rust"]
+- id: fact-07
+  gold_chunks: [09-payouts#2]
+  kind: factual
+  question: What is the IMPS limit for a payout?
+  gold_docs: [09-payouts]
+  must_contain: ["5 lakh"]
+- id: fact-08
+  gold_chunks: [02-charges-api#1, 12-glossary#0]
+  kind: factual
+  question: How long does an idempotency key stay valid?
+  gold_docs: [02-charges-api, 12-glossary]
+  must_contain: ["24 hours"]
+- id: fact-09
+  gold_chunks: [01-platform-overview#3]
+  kind: factual
+  question: When is sandbox data wiped?
+  gold_docs: [01-platform-overview]
+  must_contain: ["Sunday"]
+- id: fact-10
+  gold_chunks: [11-onboarding-and-kyc#2]
+  kind: factual
+  question: How much can a merchant charge while still under review?
+  gold_docs: [11-onboarding-and-kyc]
+  must_contain: ["2 lakh"]
+- id: fact-11
+  gold_chunks: [11-onboarding-and-kyc#4]
+  kind: factual
+  question: What dispute rate gets a merchant deactivated?
+  gold_docs: [11-onboarding-and-kyc]
+  must_contain: ["1 percent"]
+- id: fact-12
+  gold_chunks: [05-settlement#4]
+  kind: factual
+  question: Where do the acquirer files land before reconciliation?
+  gold_docs: [05-settlement]
+  must_contain: ["s3"]
+
+- id: un-01
+  kind: unanswerable
+  question: What is the refund policy for cryptocurrency payments?
+  gold_docs: []
+- id: un-02
+  kind: unanswerable
+  question: How do I turn on Apple Pay for my checkout?
+  gold_docs: []
+- id: un-03
+  kind: unanswerable
+  question: Who is the chief executive of Northwind?
+  gold_docs: []
+- id: un-04
+  kind: unanswerable
+  question: What percentage does Northwind charge on a standard card transaction?
+  gold_docs: []
+- id: un-05
+  kind: unanswerable
+  question: How do I issue a virtual card to an employee?
+  gold_docs: []
+- id: un-06
+  kind: unanswerable
+  question: What is the response time for phone support at night?
+  gold_docs: []
+- id: un-07
+  kind: unanswerable
+  question: Which Kafka topic carries charge events?
+  gold_docs: []

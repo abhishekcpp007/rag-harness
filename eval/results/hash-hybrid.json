@@ -1,0 +1,1711 @@
+{
+  "name": "hash-hybrid",
+  "ran_at": "2026-11-12T15:53:48+00:00",
+  "config": {
+    "embedder": "hash",
+    "embed_model": null,
+    "use_dense": true,
+    "use_sparse": true,
+    "rerank": "lexical",
+    "carry_heading_path": true,
+    "chunk_words": 180,
+    "chunk_overlap": 40,
+    "final_k": 5,
+    "abstain_confidence": 0.34,
+    "llm": "extractive"
+  },
+  "index": {
+    "documents": 12,
+    "chunks": 54,
+    "embedder": "hash",
+    "dims": 512,
+    "seconds": 0.02
+  },
+  "summary": {
+    "answerable_n": 35,
+    "unanswerable_n": 7,
+    "recall@1": 0.7429,
+    "recall@3": 0.8571,
+    "recall@5": 0.8571,
+    "mrr": 0.7905,
+    "ndcg@5": 0.7936,
+    "chunk_recall@1": 0.6571,
+    "chunk_recall@3": 0.8286,
+    "chunk_recall@5": 0.8571,
+    "chunk_mrr": 0.739,
+    "citation_support": 0.6562,
+    "answer_ok": 0.5429,
+    "abstained_on_answerable": 0.0857,
+    "abstained_on_unanswerable": 0.5714,
+    "ms_per_question": 4.4
+  },
+  "by_kind": {
+    "factual": {
+      "n": 12,
+      "recall@3": 1.0,
+      "mrr": 0.9583,
+      "chunk_recall@3": 1.0,
+      "chunk_mrr": 0.9167,
+      "answer_ok": 0.5833
+    },
+    "identifier": {
+      "n": 6,
+      "recall@3": 1.0,
+      "mrr": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_mrr": 1.0,
+      "answer_ok": 1.0
+    },
+    "procedural": {
+      "n": 8,
+      "recall@3": 0.875,
+      "mrr": 0.7917,
+      "chunk_recall@3": 0.875,
+      "chunk_mrr": 0.7292,
+      "answer_ok": 0.5
+    },
+    "semantic": {
+      "n": 9,
+      "recall@3": 0.5556,
+      "mrr": 0.4259,
+      "chunk_recall@3": 0.4444,
+      "chunk_mrr": 0.337,
+      "answer_ok": 0.2222
+    },
+    "unanswerable": {
+      "n": 7,
+      "abstained": 0.5714
+    }
+  },
+  "rows": [
+    {
+      "id": "id-01",
+      "kind": "identifier",
+      "question": "What does NW-4021 mean?",
+      "gold_docs": [
+        "03-error-codes",
+        "06-runbook-settlement-stall"
+      ],
+      "retrieved_docs": [
+        "03-error-codes",
+        "06-runbook-settlement-stall",
+        "02-charges-api"
+      ],
+      "confidence": 0.8897,
+      "retrieved_chunks": [
+        "03-error-codes#3",
+        "06-runbook-settlement-stall#0",
+        "03-error-codes#1",
+        "02-charges-api#1",
+        "03-error-codes#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "**NW-4021 is never the merchant's fault.** It means a whole settlement batch bounced, so every [1] | NW-4021 | Settlement batch rejected by the acquirer | See the settlement stall runbook | [3]",
+      "citations": [
+        "03-error-codes",
+        "03-error-codes"
+      ]
+    },
+    {
+      "id": "id-02",
+      "kind": "identifier",
+      "question": "I got NW-5001 back, should I retry the charge?",
+      "gold_docs": [
+        "03-error-codes"
+      ],
+      "retrieved_docs": [
+        "03-error-codes",
+        "10-sandbox-testing",
+        "02-charges-api"
+      ],
+      "confidence": 0.875,
+      "retrieved_chunks": [
+        "03-error-codes#2",
+        "03-error-codes#3",
+        "10-sandbox-testing#1",
+        "03-error-codes#1",
+        "02-charges-api#1"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "| NW-5001 | Acquirer timeout | Do not retry the charge, poll its state | [1] | NW-5002 | Ledger write failed, charge rolled back | Safe to retry with the same idempotency key | [1]",
+      "citations": [
+        "03-error-codes"
+      ]
+    },
+    {
+      "id": "id-03",
+      "kind": "identifier",
+      "question": "What is error 4090?",
+      "gold_docs": [
+        "03-error-codes"
+      ],
+      "retrieved_docs": [
+        "03-error-codes",
+        "02-charges-api"
+      ],
+      "confidence": 0.7223,
+      "retrieved_chunks": [
+        "03-error-codes#1",
+        "02-charges-api#1",
+        "03-error-codes#0",
+        "03-error-codes#3",
+        "03-error-codes#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "| NW-4090 | Idempotency key replayed with a different body | Use a fresh key | [1] Every error response carries a stable `code`, a human `message` and a `request_id`. [3]",
+      "citations": [
+        "03-error-codes",
+        "03-error-codes"
+      ]
+    },
+    {
+      "id": "id-04",
+      "kind": "identifier",
+      "question": "Which code comes back when an API key has been revoked?",
+      "gold_docs": [
+        "03-error-codes"
+      ],
+      "retrieved_docs": [
+        "03-error-codes",
+        "02-charges-api",
+        "01-platform-overview",
+        "06-runbook-settlement-stall",
+        "08-rate-limits"
+      ],
+      "confidence": 0.8067,
+      "retrieved_chunks": [
+        "03-error-codes#1",
+        "02-charges-api#1",
+        "01-platform-overview#2",
+        "06-runbook-settlement-stall#0",
+        "08-rate-limits#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "| NW-4012 | API key revoked | Rotate the key in the dashboard | [1] A charge arrives at `gateway`, which checks the API key with `authz` and applies the merchant rate limit. [3]",
+      "citations": [
+        "03-error-codes",
+        "01-platform-overview"
+      ]
+    },
+    {
+      "id": "id-05",
+      "kind": "identifier",
+      "question": "Which test card number produces an acquirer timeout?",
+      "gold_docs": [
+        "10-sandbox-testing"
+      ],
+      "retrieved_docs": [
+        "10-sandbox-testing",
+        "03-error-codes",
+        "01-platform-overview",
+        "12-glossary"
+      ],
+      "confidence": 0.9167,
+      "retrieved_chunks": [
+        "10-sandbox-testing#1",
+        "03-error-codes#3",
+        "01-platform-overview#3",
+        "03-error-codes#2",
+        "12-glossary#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "The amount does not change the outcome, the card number does. [1] | 4000 0000 0000 0119 | Acquirer timeout, returns NW-5001 | [1]",
+      "citations": [
+        "10-sandbox-testing"
+      ]
+    },
+    {
+      "id": "id-06",
+      "kind": "identifier",
+      "question": "What does NW-4013 tell me is missing?",
+      "gold_docs": [
+        "03-error-codes"
+      ],
+      "retrieved_docs": [
+        "03-error-codes",
+        "05-settlement",
+        "10-sandbox-testing"
+      ],
+      "confidence": 0.7575,
+      "retrieved_chunks": [
+        "03-error-codes#1",
+        "05-settlement#4",
+        "10-sandbox-testing#0",
+        "05-settlement#3",
+        "03-error-codes#3"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "| NW-4013 | Scope not granted to this key | Key needs `charges:write` | [1] | NW-4001 | Missing required field | Check the field named in `details.field` | [1]",
+      "citations": [
+        "03-error-codes"
+      ]
+    },
+    {
+      "id": "sem-01",
+      "kind": "semantic",
+      "question": "Why can I not have my money sooner than two days after a sale?",
+      "gold_docs": [
+        "05-settlement",
+        "12-glossary"
+      ],
+      "retrieved_docs": [
+        "12-glossary",
+        "04-webhooks",
+        "05-settlement",
+        "02-charges-api"
+      ],
+      "confidence": 0.5317,
+      "retrieved_chunks": [
+        "12-glossary#0",
+        "12-glossary#1",
+        "04-webhooks#2",
+        "05-settlement#4",
+        "02-charges-api#2"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.5,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 0.9197207891481876,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "**T+2** Two business days after the batch, which is when Indian merchants see money in the bank. [2] after 7 days if it is not captured. [1]",
+      "citations": [
+        "12-glossary",
+        "12-glossary"
+      ]
+    },
+    {
+      "id": "sem-02",
+      "kind": "semantic",
+      "question": "The receiving bank sent my transfer back, what happens to the money now?",
+      "gold_docs": [
+        "09-payouts"
+      ],
+      "retrieved_docs": [
+        "09-payouts",
+        "05-settlement",
+        "12-glossary"
+      ],
+      "confidence": 0.6346,
+      "retrieved_chunks": [
+        "09-payouts#3",
+        "09-payouts#0",
+        "05-settlement#0",
+        "12-glossary#1",
+        "12-glossary#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": false,
+      "answer": "A `returned` payout means the beneficiary bank sent the money back, usually a closed account or a wrong IFSC. [1] Outbound transfers to a beneficiary bank account or UPI handle. [2]",
+      "citations": [
+        "09-payouts",
+        "09-payouts"
+      ]
+    },
+    {
+      "id": "sem-03",
+      "kind": "semantic",
+      "question": "Our listener keeps getting the same message more than once",
+      "gold_docs": [
+        "04-webhooks"
+      ],
+      "retrieved_docs": [
+        "02-charges-api",
+        "06-runbook-settlement-stall",
+        "04-webhooks"
+      ],
+      "confidence": 0.3572,
+      "retrieved_chunks": [
+        "02-charges-api#2",
+        "06-runbook-settlement-stall#0",
+        "04-webhooks#2",
+        "06-runbook-settlement-stall#3",
+        "06-runbook-settlement-stall#4"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.3333333333333333,
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333,
+      "ndcg@5": 0.5,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.0,
+      "answer_ok": false,
+      "answer": "You cannot capture more than the authorised amount. [1] Fires when a batch has been in `submitted` for more than 90 minutes, or when charges rejected with `NW-4021` cross 50 in an hour. [2]",
+      "citations": [
+        "02-charges-api",
+        "06-runbook-settlement-stall"
+      ]
+    },
+    {
+      "id": "sem-04",
+      "kind": "semantic",
+      "question": "Someone could record our callback and send it again later, how do we stop that",
+      "gold_docs": [
+        "04-webhooks"
+      ],
+      "retrieved_docs": [
+        "07-refunds-and-disputes",
+        "10-sandbox-testing",
+        "11-onboarding-and-kyc",
+        "01-platform-overview"
+      ],
+      "confidence": 0.2244,
+      "retrieved_chunks": [
+        "07-refunds-and-disputes#2",
+        "10-sandbox-testing#3",
+        "11-onboarding-and-kyc#4",
+        "01-platform-overview#2",
+        "01-platform-overview#1"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "abstained": true,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": false,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "sem-05",
+      "kind": "semantic",
+      "question": "A buyer says the goods never arrived and their bank took the money back",
+      "gold_docs": [
+        "07-refunds-and-disputes"
+      ],
+      "retrieved_docs": [
+        "09-payouts",
+        "12-glossary"
+      ],
+      "confidence": 0.445,
+      "retrieved_chunks": [
+        "09-payouts#3",
+        "09-payouts#0",
+        "09-payouts#4",
+        "12-glossary#0",
+        "12-glossary#1"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.0,
+      "answer_ok": false,
+      "answer": "A `returned` payout means the beneficiary bank sent the money back, usually a closed account or a wrong IFSC. [1] The merchant tops up by bank transfer to the virtual account on their dashboard. [3]",
+      "citations": [
+        "09-payouts",
+        "09-payouts"
+      ]
+    },
+    {
+      "id": "sem-06",
+      "kind": "semantic",
+      "question": "How long do I have to push back before I automatically lose?",
+      "gold_docs": [
+        "07-refunds-and-disputes"
+      ],
+      "retrieved_docs": [
+        "11-onboarding-and-kyc",
+        "04-webhooks",
+        "02-charges-api",
+        "06-runbook-settlement-stall",
+        "09-payouts"
+      ],
+      "confidence": 0.3163,
+      "retrieved_chunks": [
+        "11-onboarding-and-kyc#2",
+        "04-webhooks#3",
+        "02-charges-api#3",
+        "06-runbook-settlement-stall#2",
+        "09-payouts#3"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "abstained": true,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": false,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "sem-07",
+      "kind": "semantic",
+      "question": "Can we move a merchant from Mumbai over to Singapore?",
+      "gold_docs": [
+        "01-platform-overview"
+      ],
+      "retrieved_docs": [
+        "05-settlement",
+        "01-platform-overview",
+        "12-glossary",
+        "02-charges-api"
+      ],
+      "confidence": 0.3884,
+      "retrieved_chunks": [
+        "05-settlement#0",
+        "01-platform-overview#0",
+        "12-glossary#1",
+        "02-charges-api#3",
+        "01-platform-overview#4"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.2,
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5,
+      "ndcg@5": 0.6309297535714575,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.0,
+      "answer_ok": false,
+      "answer": "Money reaches the merchant bank account on T+2 for India and T+1 for Singapore, counting business days only. [1] The state machine only moves forward. [4]",
+      "citations": [
+        "05-settlement",
+        "02-charges-api"
+      ]
+    },
+    {
+      "id": "sem-08",
+      "kind": "semantic",
+      "question": "Which part of the system is allowed to change a balance?",
+      "gold_docs": [
+        "01-platform-overview"
+      ],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "07-refunds-and-disputes",
+        "09-payouts",
+        "08-rate-limits"
+      ],
+      "confidence": 0.3959,
+      "retrieved_chunks": [
+        "01-platform-overview#1",
+        "07-refunds-and-disputes#2",
+        "09-payouts#4",
+        "09-payouts#0",
+        "08-rate-limits#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "`ledger` is the only service allowed to write a balance. [1] Tier changes are a support request with a reason and a traffic estimate. [5]",
+      "citations": [
+        "01-platform-overview",
+        "08-rate-limits"
+      ]
+    },
+    {
+      "id": "sem-09",
+      "kind": "semantic",
+      "question": "What stops a double tap on the pay button from charging twice?",
+      "gold_docs": [
+        "02-charges-api"
+      ],
+      "retrieved_docs": [
+        "11-onboarding-and-kyc",
+        "04-webhooks",
+        "06-runbook-settlement-stall",
+        "01-platform-overview"
+      ],
+      "confidence": 0.3264,
+      "retrieved_chunks": [
+        "11-onboarding-and-kyc#4",
+        "04-webhooks#2",
+        "06-runbook-settlement-stall#2",
+        "06-runbook-settlement-stall#0",
+        "01-platform-overview#1"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "abstained": true,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": false,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "proc-01",
+      "kind": "procedural",
+      "question": "A batch has been submitted for two hours, what is the first thing I check?",
+      "gold_docs": [
+        "06-runbook-settlement-stall"
+      ],
+      "retrieved_docs": [
+        "06-runbook-settlement-stall",
+        "05-settlement"
+      ],
+      "confidence": 0.7103,
+      "retrieved_chunks": [
+        "06-runbook-settlement-stall#0",
+        "06-runbook-settlement-stall#2",
+        "05-settlement#1",
+        "05-settlement#2",
+        "06-runbook-settlement-stall#1"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.5,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "Fires when a batch has been in `submitted` for more than 90 minutes, or when charges rejected with `NW-4021` cross 50 in an hour. [1] The batch id appears in the acquirer file and in `ledger`, and a hand edit puts the two out of sync in a way recon cannot repair on its own. [2]",
+      "citations": [
+        "06-runbook-settlement-stall",
+        "06-runbook-settlement-stall"
+      ]
+    },
+    {
+      "id": "proc-02",
+      "kind": "procedural",
+      "question": "When do I page the settlement on-call?",
+      "gold_docs": [
+        "06-runbook-settlement-stall"
+      ],
+      "retrieved_docs": [
+        "06-runbook-settlement-stall",
+        "05-settlement",
+        "08-rate-limits"
+      ],
+      "confidence": 0.8277,
+      "retrieved_chunks": [
+        "06-runbook-settlement-stall#2",
+        "05-settlement#4",
+        "06-runbook-settlement-stall#3",
+        "08-rate-limits#3",
+        "06-runbook-settlement-stall#4"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "4. Page the on-call for `settlement` if two re-submissions fail, or if the held amount is over [1] A break over 1000 INR pages the on-call. [2]",
+      "citations": [
+        "06-runbook-settlement-stall",
+        "05-settlement"
+      ]
+    },
+    {
+      "id": "proc-03",
+      "kind": "procedural",
+      "question": "How do I return only part of a payment to the customer?",
+      "gold_docs": [
+        "07-refunds-and-disputes"
+      ],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "09-payouts",
+        "07-refunds-and-disputes",
+        "02-charges-api"
+      ],
+      "confidence": 0.4859,
+      "retrieved_chunks": [
+        "01-platform-overview#1",
+        "09-payouts#0",
+        "07-refunds-and-disputes#0",
+        "02-charges-api#1",
+        "01-platform-overview#3"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.3333333333333333,
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.3333333333333333,
+      "ndcg@5": 0.5,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.0,
+      "answer_ok": false,
+      "answer": "Payouts are the only part of the platform that can move money out, so the controls are heavier than on the collection side. [2] | `payments` | charge lifecycle, refunds, chargebacks | Java | [1]",
+      "citations": [
+        "01-platform-overview",
+        "09-payouts"
+      ]
+    },
+    {
+      "id": "proc-04",
+      "kind": "procedural",
+      "question": "How should a client back off after a 429?",
+      "gold_docs": [
+        "08-rate-limits"
+      ],
+      "retrieved_docs": [
+        "08-rate-limits",
+        "03-error-codes",
+        "04-webhooks",
+        "06-runbook-settlement-stall"
+      ],
+      "confidence": 0.4905,
+      "retrieved_chunks": [
+        "08-rate-limits#1",
+        "03-error-codes#1",
+        "04-webhooks#5",
+        "03-error-codes#2",
+        "06-runbook-settlement-stall#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "| NW-4029 | Rate limit exceeded | Back off, read `Retry-After` | [2] Do not retry a 429 on a write without the original `Idempotency-Key`. [1]",
+      "citations": [
+        "08-rate-limits",
+        "03-error-codes"
+      ]
+    },
+    {
+      "id": "proc-05",
+      "kind": "procedural",
+      "question": "How do I force a charge into the disputed state while testing?",
+      "gold_docs": [
+        "10-sandbox-testing"
+      ],
+      "retrieved_docs": [
+        "10-sandbox-testing",
+        "02-charges-api",
+        "08-rate-limits",
+        "12-glossary",
+        "03-error-codes"
+      ],
+      "confidence": 0.8571,
+      "retrieved_chunks": [
+        "10-sandbox-testing#2",
+        "02-charges-api#3",
+        "08-rate-limits#1",
+        "12-glossary#1",
+        "03-error-codes#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "Use it to drive a charge into `disputed` or `settled` without waiting for a batch. [1] A charge can move to `failed` from any state before `captured`, and to `refunded` or `disputed` after `captured`. [2]",
+      "citations": [
+        "10-sandbox-testing",
+        "02-charges-api"
+      ]
+    },
+    {
+      "id": "proc-06",
+      "kind": "procedural",
+      "question": "Reconciliation reported a break over 1000 rupees, who gets woken up?",
+      "gold_docs": [
+        "05-settlement"
+      ],
+      "retrieved_docs": [
+        "05-settlement",
+        "02-charges-api",
+        "12-glossary",
+        "01-platform-overview",
+        "09-payouts"
+      ],
+      "confidence": 0.7778,
+      "retrieved_chunks": [
+        "05-settlement#4",
+        "02-charges-api#4",
+        "12-glossary#0",
+        "01-platform-overview#0",
+        "09-payouts#4"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "A break over 1000 INR pages the on-call. [1] A mismatch raises a `recon.break` alert with the batch id and the rupee difference. [1]",
+      "citations": [
+        "05-settlement"
+      ]
+    },
+    {
+      "id": "proc-07",
+      "kind": "procedural",
+      "question": "How do I register a new payee before sending them money?",
+      "gold_docs": [
+        "09-payouts"
+      ],
+      "retrieved_docs": [
+        "04-webhooks",
+        "06-runbook-settlement-stall",
+        "11-onboarding-and-kyc",
+        "01-platform-overview",
+        "05-settlement"
+      ],
+      "confidence": 0.3604,
+      "retrieved_chunks": [
+        "04-webhooks#0",
+        "06-runbook-settlement-stall#2",
+        "11-onboarding-and-kyc#4",
+        "01-platform-overview#3",
+        "05-settlement#0"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 0.0,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
+      "recall@1": 0.0,
+      "recall@3": 0.0,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.0,
+      "answer_ok": false,
+      "answer": "Register an endpoint per environment in the dashboard. [1] Deactivation stops new charges immediately. [3]",
+      "citations": [
+        "04-webhooks",
+        "11-onboarding-and-kyc"
+      ]
+    },
+    {
+      "id": "proc-08",
+      "kind": "procedural",
+      "question": "What documents does a private limited company have to submit?",
+      "gold_docs": [
+        "11-onboarding-and-kyc"
+      ],
+      "retrieved_docs": [
+        "11-onboarding-and-kyc",
+        "06-runbook-settlement-stall",
+        "07-refunds-and-disputes",
+        "09-payouts"
+      ],
+      "confidence": 0.9,
+      "retrieved_chunks": [
+        "11-onboarding-and-kyc#1",
+        "11-onboarding-and-kyc#0",
+        "06-runbook-settlement-stall#2",
+        "07-refunds-and-disputes#1",
+        "09-payouts#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "For a private limited company: certificate of incorporation, PAN, GSTIN, a cancelled cheque or bank statement no older than 3 months, and the director's identity proof. [1] A narrative with no attached document loses. [4]",
+      "citations": [
+        "11-onboarding-and-kyc",
+        "07-refunds-and-disputes"
+      ]
+    },
+    {
+      "id": "fact-01",
+      "kind": "factual",
+      "question": "What time does the settlement sweep run in India?",
+      "gold_docs": [
+        "05-settlement"
+      ],
+      "retrieved_docs": [
+        "05-settlement",
+        "01-platform-overview",
+        "12-glossary",
+        "10-sandbox-testing"
+      ],
+      "confidence": 0.8363,
+      "retrieved_chunks": [
+        "05-settlement#1",
+        "05-settlement#0",
+        "01-platform-overview#0",
+        "12-glossary#1",
+        "10-sandbox-testing#4"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "There is no manual sweep, and asking for one has been refused every time it was asked. [1] The sweep runs at 23:40 IST for `ap-south-1` and 23:40 SGT for `ap-southeast-1`. [1]",
+      "citations": [
+        "05-settlement"
+      ]
+    },
+    {
+      "id": "fact-02",
+      "kind": "factual",
+      "question": "How many writes per minute does the standard tier allow?",
+      "gold_docs": [
+        "08-rate-limits"
+      ],
+      "retrieved_docs": [
+        "08-rate-limits",
+        "10-sandbox-testing"
+      ],
+      "confidence": 0.8571,
+      "retrieved_chunks": [
+        "08-rate-limits#0",
+        "10-sandbox-testing#4",
+        "08-rate-limits#2",
+        "08-rate-limits#1",
+        "08-rate-limits#3"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "| Tier | Writes per minute | Reads per minute | Burst | [1] | standard | 300 | 3000 | 60 | [1]",
+      "citations": [
+        "08-rate-limits"
+      ]
+    },
+    {
+      "id": "fact-03",
+      "kind": "factual",
+      "question": "What is the biggest page size when listing charges?",
+      "gold_docs": [
+        "02-charges-api"
+      ],
+      "retrieved_docs": [
+        "02-charges-api",
+        "08-rate-limits",
+        "06-runbook-settlement-stall",
+        "04-webhooks"
+      ],
+      "confidence": 0.6442,
+      "retrieved_chunks": [
+        "02-charges-api#4",
+        "08-rate-limits#3",
+        "06-runbook-settlement-stall#2",
+        "04-webhooks#4",
+        "02-charges-api#3"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "There is no offset parameter, because offsets over a live table skip rows when new charges land between pages. [1] Listing endpoints cost one unit per page, not per row, so a `limit=100` page is the same budget as a `limit=10` page. [2]",
+      "citations": [
+        "02-charges-api",
+        "08-rate-limits"
+      ]
+    },
+    {
+      "id": "fact-04",
+      "kind": "factual",
+      "question": "How long does an authorisation last before it expires?",
+      "gold_docs": [
+        "02-charges-api",
+        "12-glossary"
+      ],
+      "retrieved_docs": [
+        "02-charges-api",
+        "04-webhooks",
+        "12-glossary",
+        "11-onboarding-and-kyc",
+        "07-refunds-and-disputes"
+      ],
+      "confidence": 0.4424,
+      "retrieved_chunks": [
+        "02-charges-api#2",
+        "04-webhooks#3",
+        "12-glossary#0",
+        "11-onboarding-and-kyc#2",
+        "07-refunds-and-disputes#1"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 0.9197207891481876,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "Capture it within 7 days or the authorisation expires and the hold is released by the issuer. [1] **Authorisation** The issuer's promise to hold funds. It is not money. An authorisation expires [3]",
+      "citations": [
+        "02-charges-api",
+        "12-glossary"
+      ]
+    },
+    {
+      "id": "fact-05",
+      "kind": "factual",
+      "question": "Which bank is the acquirer in Singapore?",
+      "gold_docs": [
+        "12-glossary",
+        "01-platform-overview"
+      ],
+      "retrieved_docs": [
+        "05-settlement",
+        "12-glossary",
+        "01-platform-overview",
+        "09-payouts"
+      ],
+      "confidence": 0.7854,
+      "retrieved_chunks": [
+        "05-settlement#0",
+        "12-glossary#0",
+        "12-glossary#1",
+        "01-platform-overview#0",
+        "09-payouts#0"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.5,
+      "recall@1": 0.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 0.5,
+      "ndcg@5": 0.6934264036172708,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "**Acquirer** The bank that holds Northwind's merchant account and routes card traffic to the [2] Money reaches the merchant bank account on T+2 for India and T+1 for Singapore, counting business days only. [1]",
+      "citations": [
+        "05-settlement",
+        "12-glossary"
+      ]
+    },
+    {
+      "id": "fact-06",
+      "kind": "factual",
+      "question": "What language is the ledger service written in?",
+      "gold_docs": [
+        "01-platform-overview"
+      ],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "07-refunds-and-disputes",
+        "03-error-codes",
+        "12-glossary"
+      ],
+      "confidence": 0.8479,
+      "retrieved_chunks": [
+        "01-platform-overview#1",
+        "07-refunds-and-disputes#1",
+        "03-error-codes#2",
+        "12-glossary#1",
+        "12-glossary#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": false,
+      "answer": "| Service | Owns | Language | [1] `ledger` is the only service allowed to write a balance. [1]",
+      "citations": [
+        "01-platform-overview"
+      ]
+    },
+    {
+      "id": "fact-07",
+      "kind": "factual",
+      "question": "What is the IMPS limit for a payout?",
+      "gold_docs": [
+        "09-payouts"
+      ],
+      "retrieved_docs": [
+        "09-payouts",
+        "08-rate-limits"
+      ],
+      "confidence": 0.6596,
+      "retrieved_chunks": [
+        "09-payouts#3",
+        "09-payouts#2",
+        "08-rate-limits#3",
+        "09-payouts#0",
+        "08-rate-limits#2"
+      ],
+      "chunk_recall@1": 0.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 0.5,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": false,
+      "answer": "A payout stuck in `processing` for over 4 hours on IMPS is an incident. [1] A `returned` payout means the beneficiary bank sent the money back, usually a closed account or a wrong IFSC. [1]",
+      "citations": [
+        "09-payouts"
+      ]
+    },
+    {
+      "id": "fact-08",
+      "kind": "factual",
+      "question": "How long does an idempotency key stay valid?",
+      "gold_docs": [
+        "02-charges-api",
+        "12-glossary"
+      ],
+      "retrieved_docs": [
+        "02-charges-api",
+        "08-rate-limits",
+        "09-payouts",
+        "03-error-codes"
+      ],
+      "confidence": 0.4173,
+      "retrieved_chunks": [
+        "02-charges-api#1",
+        "08-rate-limits#1",
+        "09-payouts#2",
+        "03-error-codes#1",
+        "03-error-codes#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 0.6131471927654584,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "The `Idempotency-Key` header is required on every write. [1] Do not retry a 429 on a write without the original `Idempotency-Key`. [2]",
+      "citations": [
+        "02-charges-api",
+        "08-rate-limits"
+      ]
+    },
+    {
+      "id": "fact-09",
+      "kind": "factual",
+      "question": "When is sandbox data wiped?",
+      "gold_docs": [
+        "01-platform-overview"
+      ],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "10-sandbox-testing",
+        "02-charges-api"
+      ],
+      "confidence": 0.9057,
+      "retrieved_chunks": [
+        "01-platform-overview#3",
+        "10-sandbox-testing#0",
+        "10-sandbox-testing#4",
+        "10-sandbox-testing#2",
+        "02-charges-api#0"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "Sandbox data is wiped every Sunday at 02:00 IST. [1] They cannot reach production and a production key cannot reach sandbox. [2]",
+      "citations": [
+        "01-platform-overview",
+        "10-sandbox-testing"
+      ]
+    },
+    {
+      "id": "fact-10",
+      "kind": "factual",
+      "question": "How much can a merchant charge while still under review?",
+      "gold_docs": [
+        "11-onboarding-and-kyc"
+      ],
+      "retrieved_docs": [
+        "11-onboarding-and-kyc",
+        "03-error-codes",
+        "01-platform-overview"
+      ],
+      "confidence": 0.6743,
+      "retrieved_chunks": [
+        "11-onboarding-and-kyc#2",
+        "11-onboarding-and-kyc#4",
+        "11-onboarding-and-kyc#0",
+        "03-error-codes#3",
+        "01-platform-overview#2"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 1.0,
+      "answer_ok": true,
+      "answer": "A merchant in `under_review` can take live charges up to a cumulative 2 lakh INR, but settlement is held until activation. [1] Existing captured charges still settle, because the money already belongs to the merchant. [2]",
+      "citations": [
+        "11-onboarding-and-kyc",
+        "11-onboarding-and-kyc"
+      ]
+    },
+    {
+      "id": "fact-11",
+      "kind": "factual",
+      "question": "What dispute rate gets a merchant deactivated?",
+      "gold_docs": [
+        "11-onboarding-and-kyc"
+      ],
+      "retrieved_docs": [
+        "11-onboarding-and-kyc",
+        "07-refunds-and-disputes",
+        "01-platform-overview",
+        "03-error-codes"
+      ],
+      "confidence": 0.8098,
+      "retrieved_chunks": [
+        "11-onboarding-and-kyc#4",
+        "07-refunds-and-disputes#2",
+        "01-platform-overview#0",
+        "03-error-codes#3",
+        "07-refunds-and-disputes#1"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "An activated merchant can be deactivated for a failed periodic review, for a dispute rate above 1 percent of monthly volume, or for a chargeback ratio breach raised by the network. [1] The disputed amount is debited from the merchant balance the moment the dispute opens, not when it is lost. [2]",
+      "citations": [
+        "11-onboarding-and-kyc",
+        "07-refunds-and-disputes"
+      ]
+    },
+    {
+      "id": "fact-12",
+      "kind": "factual",
+      "question": "Where do the acquirer files land before reconciliation?",
+      "gold_docs": [
+        "05-settlement"
+      ],
+      "retrieved_docs": [
+        "05-settlement",
+        "06-runbook-settlement-stall",
+        "01-platform-overview",
+        "12-glossary"
+      ],
+      "confidence": 0.8747,
+      "retrieved_chunks": [
+        "05-settlement#4",
+        "06-runbook-settlement-stall#2",
+        "01-platform-overview#1",
+        "06-runbook-settlement-stall#3",
+        "12-glossary#1"
+      ],
+      "chunk_recall@1": 1.0,
+      "chunk_recall@3": 1.0,
+      "chunk_recall@5": 1.0,
+      "chunk_mrr": 1.0,
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "mrr": 1.0,
+      "ndcg@5": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "| `settlement` | batching, acquirer files, reconciliation | Java | [3] Files land by 04:30. [1]",
+      "citations": [
+        "05-settlement",
+        "01-platform-overview"
+      ]
+    },
+    {
+      "id": "un-01",
+      "kind": "unanswerable",
+      "question": "What is the refund policy for cryptocurrency payments?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "07-refunds-and-disputes"
+      ],
+      "confidence": 0.4505,
+      "retrieved_chunks": [
+        "01-platform-overview#1",
+        "07-refunds-and-disputes#0",
+        "01-platform-overview#0",
+        "01-platform-overview#4",
+        "07-refunds-and-disputes#2"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": false,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "| `payments` | charge lifecycle, refunds, chargebacks | Java | [1] Refunds settle on the next batch. [2]",
+      "citations": [
+        "01-platform-overview",
+        "07-refunds-and-disputes"
+      ]
+    },
+    {
+      "id": "un-02",
+      "kind": "unanswerable",
+      "question": "How do I turn on Apple Pay for my checkout?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "08-rate-limits",
+        "06-runbook-settlement-stall",
+        "07-refunds-and-disputes",
+        "12-glossary",
+        "09-payouts"
+      ],
+      "confidence": 0.2402,
+      "retrieved_chunks": [
+        "08-rate-limits#1",
+        "06-runbook-settlement-stall#2",
+        "07-refunds-and-disputes#2",
+        "12-glossary#0",
+        "09-payouts#4"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": true,
+      "abstain_correct": true,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "un-03",
+      "kind": "unanswerable",
+      "question": "Who is the chief executive of Northwind?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "02-charges-api",
+        "01-platform-overview",
+        "12-glossary",
+        "03-error-codes"
+      ],
+      "confidence": 0.2565,
+      "retrieved_chunks": [
+        "02-charges-api#0",
+        "01-platform-overview#0",
+        "01-platform-overview#1",
+        "12-glossary#0",
+        "03-error-codes#3"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": true,
+      "abstain_correct": true,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "un-04",
+      "kind": "unanswerable",
+      "question": "What percentage does Northwind charge on a standard card transaction?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "12-glossary",
+        "01-platform-overview",
+        "03-error-codes",
+        "07-refunds-and-disputes",
+        "11-onboarding-and-kyc"
+      ],
+      "confidence": 0.4717,
+      "retrieved_chunks": [
+        "12-glossary#0",
+        "01-platform-overview#0",
+        "03-error-codes#3",
+        "07-refunds-and-disputes#0",
+        "11-onboarding-and-kyc#2"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": false,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "Northwind is a card acquiring and payouts platform for marketplaces in India and Singapore. [2] The Northwind processing fee on the original charge is **not** returned on a refund. [4]",
+      "citations": [
+        "01-platform-overview",
+        "07-refunds-and-disputes"
+      ]
+    },
+    {
+      "id": "un-05",
+      "kind": "unanswerable",
+      "question": "How do I issue a virtual card to an employee?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "01-platform-overview",
+        "10-sandbox-testing",
+        "09-payouts",
+        "11-onboarding-and-kyc",
+        "07-refunds-and-disputes"
+      ],
+      "confidence": 0.2764,
+      "retrieved_chunks": [
+        "01-platform-overview#0",
+        "10-sandbox-testing#1",
+        "09-payouts#4",
+        "11-onboarding-and-kyc#2",
+        "07-refunds-and-disputes#0"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": true,
+      "abstain_correct": true,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "un-06",
+      "kind": "unanswerable",
+      "question": "What is the response time for phone support at night?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "06-runbook-settlement-stall",
+        "08-rate-limits",
+        "03-error-codes",
+        "05-settlement",
+        "09-payouts"
+      ],
+      "confidence": 0.2681,
+      "retrieved_chunks": [
+        "06-runbook-settlement-stall#3",
+        "08-rate-limits#2",
+        "03-error-codes#0",
+        "05-settlement#1",
+        "09-payouts#4"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": true,
+      "abstain_correct": true,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "I could not find that in the handbook.",
+      "citations": []
+    },
+    {
+      "id": "un-07",
+      "kind": "unanswerable",
+      "question": "Which Kafka topic carries charge events?",
+      "gold_docs": [],
+      "retrieved_docs": [
+        "04-webhooks",
+        "03-error-codes"
+      ],
+      "confidence": 0.591,
+      "retrieved_chunks": [
+        "04-webhooks#3",
+        "04-webhooks#4",
+        "03-error-codes#0",
+        "04-webhooks#5",
+        "04-webhooks#0"
+      ],
+      "chunk_recall@1": NaN,
+      "chunk_recall@3": NaN,
+      "chunk_recall@5": NaN,
+      "chunk_mrr": NaN,
+      "recall@1": NaN,
+      "recall@3": NaN,
+      "recall@5": NaN,
+      "mrr": NaN,
+      "ndcg@5": NaN,
+      "abstained": false,
+      "abstain_correct": false,
+      "citation_support": NaN,
+      "answer_ok": null,
+      "answer": "Every event carries the full object and an `object_version` integer. [1] `charge.captured` can arrive before `charge.authorised`. [1]",
+      "citations": [
+        "04-webhooks"
+      ]
+    }
+  ]
+}

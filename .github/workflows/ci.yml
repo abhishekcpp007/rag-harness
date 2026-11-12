@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # The suite runs on the hash embedder. No model download, so CI stays off the network and
+      # the numbers are the same on every machine.
+      RAG_EMBEDDER: hash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check rag eval tests
+      - run: pytest -q
+      - name: eval on the offline backend
+        run: |
+          python -m eval.run_eval --name ci-hash --embedder hash
+          python - <<'PY'
+          import json, sys
+          s = json.load(open("eval/results/ci-hash.json"))["summary"]
+          print(json.dumps(s, indent=2))
+          # A floor, not a target. If the hash backend drops below this, retrieval broke.
+          assert s["chunk_recall@3"] >= 0.70, s["chunk_recall@3"]
+          assert s["abstained_on_answerable"] <= 0.20, s["abstained_on_answerable"]
+          PY

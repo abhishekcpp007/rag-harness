@@ -1,0 +1,654 @@
+{
+  "hash": {
+    "embedder": "hash",
+    "n_answerable": 35,
+    "n_unanswerable": 7,
+    "wrong_abstain_budget": 0.125,
+    "best_margin": {
+      "threshold": 0.6,
+      "abstained_on_unanswerable": 1.0,
+      "abstained_on_answerable": 0.371,
+      "margin": 0.629
+    },
+    "chosen": {
+      "threshold": 0.34,
+      "abstained_on_unanswerable": 0.571,
+      "abstained_on_answerable": 0.114,
+      "margin": 0.457
+    },
+    "curve": [
+      {
+        "threshold": 0.0,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.02,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.04,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.06,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.08,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.1,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.12,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.14,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.16,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.18,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.2,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.22,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.24,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.057,
+        "margin": -0.057
+      },
+      {
+        "threshold": 0.26,
+        "abstained_on_unanswerable": 0.286,
+        "abstained_on_answerable": 0.086,
+        "margin": 0.2
+      },
+      {
+        "threshold": 0.28,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.086,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.3,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.114,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.32,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.114,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.34,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.114,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.36,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.143,
+        "margin": 0.429
+      },
+      {
+        "threshold": 0.38,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.143,
+        "margin": 0.429
+      },
+      {
+        "threshold": 0.4,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.2,
+        "margin": 0.371
+      },
+      {
+        "threshold": 0.42,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.229,
+        "margin": 0.343
+      },
+      {
+        "threshold": 0.44,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.229,
+        "margin": 0.343
+      },
+      {
+        "threshold": 0.46,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.286,
+        "margin": 0.429
+      },
+      {
+        "threshold": 0.48,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.286,
+        "margin": 0.571
+      },
+      {
+        "threshold": 0.5,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.343,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.52,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.343,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.54,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.56,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.58,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.6,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.629
+      },
+      {
+        "threshold": 0.62,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.629
+      },
+      {
+        "threshold": 0.64,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.4,
+        "margin": 0.6
+      },
+      {
+        "threshold": 0.66,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.457,
+        "margin": 0.543
+      },
+      {
+        "threshold": 0.68,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.486,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.7,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.486,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.72,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.514,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.74,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.543,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.76,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.571,
+        "margin": 0.429
+      },
+      {
+        "threshold": 0.78,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.6,
+        "margin": 0.4
+      },
+      {
+        "threshold": 0.8,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.629,
+        "margin": 0.371
+      },
+      {
+        "threshold": 0.82,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.686,
+        "margin": 0.314
+      },
+      {
+        "threshold": 0.84,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.743,
+        "margin": 0.257
+      },
+      {
+        "threshold": 0.86,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.829,
+        "margin": 0.171
+      },
+      {
+        "threshold": 0.88,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.886,
+        "margin": 0.114
+      },
+      {
+        "threshold": 0.9,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.914,
+        "margin": 0.086
+      },
+      {
+        "threshold": 0.92,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.94,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.96,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.98,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      }
+    ]
+  },
+  "fastembed": {
+    "embedder": "fastembed",
+    "n_answerable": 35,
+    "n_unanswerable": 7,
+    "wrong_abstain_budget": 0.125,
+    "best_margin": {
+      "threshold": 0.6,
+      "abstained_on_unanswerable": 1.0,
+      "abstained_on_answerable": 0.371,
+      "margin": 0.629
+    },
+    "chosen": {
+      "threshold": 0.34,
+      "abstained_on_unanswerable": 0.714,
+      "abstained_on_answerable": 0.114,
+      "margin": 0.6
+    },
+    "curve": [
+      {
+        "threshold": 0.0,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.02,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.04,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.06,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.08,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.1,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.12,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.14,
+        "abstained_on_unanswerable": 0.0,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.16,
+        "abstained_on_unanswerable": 0.143,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.143
+      },
+      {
+        "threshold": 0.18,
+        "abstained_on_unanswerable": 0.143,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.143
+      },
+      {
+        "threshold": 0.2,
+        "abstained_on_unanswerable": 0.143,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.143
+      },
+      {
+        "threshold": 0.22,
+        "abstained_on_unanswerable": 0.143,
+        "abstained_on_answerable": 0.0,
+        "margin": 0.143
+      },
+      {
+        "threshold": 0.24,
+        "abstained_on_unanswerable": 0.143,
+        "abstained_on_answerable": 0.029,
+        "margin": 0.114
+      },
+      {
+        "threshold": 0.26,
+        "abstained_on_unanswerable": 0.286,
+        "abstained_on_answerable": 0.029,
+        "margin": 0.257
+      },
+      {
+        "threshold": 0.28,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.029,
+        "margin": 0.543
+      },
+      {
+        "threshold": 0.3,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.057,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.32,
+        "abstained_on_unanswerable": 0.571,
+        "abstained_on_answerable": 0.086,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.34,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.114,
+        "margin": 0.6
+      },
+      {
+        "threshold": 0.36,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.143,
+        "margin": 0.571
+      },
+      {
+        "threshold": 0.38,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.143,
+        "margin": 0.571
+      },
+      {
+        "threshold": 0.4,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.2,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.42,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.257,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.44,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.257,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.46,
+        "abstained_on_unanswerable": 0.714,
+        "abstained_on_answerable": 0.314,
+        "margin": 0.4
+      },
+      {
+        "threshold": 0.48,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.343,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.5,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.52,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.54,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.56,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.58,
+        "abstained_on_unanswerable": 0.857,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.6,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.629
+      },
+      {
+        "threshold": 0.62,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.371,
+        "margin": 0.629
+      },
+      {
+        "threshold": 0.64,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.4,
+        "margin": 0.6
+      },
+      {
+        "threshold": 0.66,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.457,
+        "margin": 0.543
+      },
+      {
+        "threshold": 0.68,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.486,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.7,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.486,
+        "margin": 0.514
+      },
+      {
+        "threshold": 0.72,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.514,
+        "margin": 0.486
+      },
+      {
+        "threshold": 0.74,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.543,
+        "margin": 0.457
+      },
+      {
+        "threshold": 0.76,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.571,
+        "margin": 0.429
+      },
+      {
+        "threshold": 0.78,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.6,
+        "margin": 0.4
+      },
+      {
+        "threshold": 0.8,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.629,
+        "margin": 0.371
+      },
+      {
+        "threshold": 0.82,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.686,
+        "margin": 0.314
+      },
+      {
+        "threshold": 0.84,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.743,
+        "margin": 0.257
+      },
+      {
+        "threshold": 0.86,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.829,
+        "margin": 0.171
+      },
+      {
+        "threshold": 0.88,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.886,
+        "margin": 0.114
+      },
+      {
+        "threshold": 0.9,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 0.914,
+        "margin": 0.086
+      },
+      {
+        "threshold": 0.92,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.94,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.96,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 0.98,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "abstained_on_unanswerable": 1.0,
+        "abstained_on_answerable": 1.0,
+        "margin": 0.0
+      }
+    ]
+  }
+}
