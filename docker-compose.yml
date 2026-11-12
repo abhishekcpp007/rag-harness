@@ -1,6 +1,8 @@
 services:
   rag:
-    build: .
+    build:
+      context: .
+      target: runtime
     ports:
       - "8000:8000"
     environment:

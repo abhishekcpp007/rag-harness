@@ -10,9 +10,10 @@ to it, and two of those numbers came out the opposite way from what I expected b
 ```bash
 make install        # uv venv, editable install, fastembed for real embeddings
 make index          # 12 documents -> 54 chunks
-make test           # 29 tests, no network, no model download
+make test           # 35 tests, no network, no model download
 make eval           # 7 configurations over 42 questions
 make tables         # the markdown below, regenerated from eval/results/
+make docker-test    # the same lint and suite inside the image, with no network
 ```
 
 Ask it something:
@@ -71,13 +72,13 @@ Regenerate with `make eval && make tables`. Every row reindexes from scratch.
 
 | run | chunk recall@1 | chunk recall@3 | chunk MRR | answer ok | citations on target | ms |
 |---|---|---|---|---|---|---|
-| default (bge-small, dense, lexical rerank) | 0.80 | 0.89 | 0.850 | 0.60 | 0.74 | 31 |
-| default minus the lexical rerank | 0.80 | 0.89 | 0.834 | 0.60 | 0.74 | 23 |
-| default minus the heading path | 0.80 | 0.86 | 0.841 | 0.57 | 0.70 | 26 |
-| default plus BM25 fusion | 0.71 | 0.83 | 0.793 | 0.51 | 0.69 | 27 |
-| BM25 alone | 0.66 | 0.83 | 0.739 | 0.51 | 0.66 | 4 |
-| hash embedder, dense only | 0.60 | 0.74 | 0.667 | 0.51 | 0.66 | 4 |
-| hash embedder plus BM25 fusion | 0.66 | 0.83 | 0.739 | 0.54 | 0.66 | 4 |
+| default (bge-small, dense, lexical rerank) | 0.80 | 0.89 | 0.850 | 0.60 | 0.74 | 28 |
+| default minus the lexical rerank | 0.80 | 0.89 | 0.834 | 0.60 | 0.74 | 22 |
+| default minus the heading path | 0.80 | 0.86 | 0.836 | 0.57 | 0.70 | 22 |
+| default plus BM25 fusion | 0.71 | 0.83 | 0.793 | 0.51 | 0.69 | 37 |
+| BM25 alone | 0.66 | 0.83 | 0.739 | 0.51 | 0.66 | 3 |
+| hash embedder, dense only | 0.60 | 0.74 | 0.667 | 0.51 | 0.66 | 3 |
+| hash embedder plus BM25 fusion | 0.66 | 0.83 | 0.739 | 0.54 | 0.66 | 3 |
 
 Chunk MRR split by question kind:
 
@@ -85,7 +86,7 @@ Chunk MRR split by question kind:
 |---|---|---|---|---|
 | default (bge-small, dense, lexical rerank) | 1.00 | 0.56 | 0.84 | 1.00 |
 | default minus the lexical rerank | 1.00 | 0.52 | 0.82 | 1.00 |
-| default minus the heading path | 1.00 | 0.44 | 0.94 | 1.00 |
+| default minus the heading path | 1.00 | 0.42 | 0.94 | 1.00 |
 | default plus BM25 fusion | 1.00 | 0.44 | 0.78 | 0.96 |
 | BM25 alone | 1.00 | 0.34 | 0.67 | 0.96 |
 | hash embedder, dense only | 1.00 | 0.28 | 0.54 | 0.88 |
@@ -173,7 +174,7 @@ Two rules, both measurable.
 **The heading path travels with the text.** A paragraph reading "retry twice, then page the
 on-call" is embedded as `Runbook: Settlement stall > Recovery steps :: retry twice, then page the
 on-call`. Turning that off costs 0.03 answer quality and most of the semantic slice, 0.56 down to
-0.44.
+0.42.
 
 **Code fences and tables are atomic.** Splitting a fence in half produces a chunk that reads like
 config and embeds like prose. `tests/test_chunking.py` pins it by chunking a document at a window
@@ -181,7 +182,7 @@ small enough to force the split and asserting the backtick count stays even.
 
 ## What the harness caught
 
-Four things, and none of them would have shown up by reading a ranking table.
+Six things, and none of them would have shown up by reading a ranking table.
 
 **The abstain signal was secretly coupled to a feature flag.** `confidence()` read its BM25 term
 off `hit.signals["sparse"]`, which only exists when sparse retrieval is switched on. Turning BM25
@@ -207,6 +208,20 @@ confident retriever beat two lukewarm ones. It doesn't. A chunk ranked fourth by
 2/64 = 0.031 and beats a chunk ranked first by one and missing from the other at 1/61 = 0.016. The
 test failed, the docstring was wrong, and `tests/test_fusion.py` now pins the behaviour at both
 k=60 and k=0.
+
+**A run could swap its encoder and keep the old label.** `get_embedder` falls back to the hash
+backend when fastembed is missing, prints one line, and carries on. That's the right call for the
+service, because a fresh clone still answers questions. It's the wrong call for the eval. The first
+time I ran the ablations inside Docker, a leftover `RAG_EMBEDDER=hash` in the test image turned all
+seven of them into hash runs, and each result file was written under its usual name. The numbers
+were real. The labels weren't. `eval/run_eval.py` now fails when the backend that ran isn't the one
+that was asked for, and `eval/table.py` won't render a row whose file disagrees with the label
+above it.
+
+**A flag had never once worked.** `--abstain-score` set a field called `abstain_score`. The setting
+is called `abstain_confidence`, so every use of that flag raised TypeError, and nothing noticed
+because nothing in the repo called it. It's `--abstain-confidence` now, with a test that drives it
+through `main()`.
 
 ## Things I measured and then left alone
 
@@ -266,7 +281,7 @@ rag/
   confidence.py   the abstain signal, and what had to be thrown away first
   answer.py       context assembly, citation enforcement, refusal
   llm.py          extractive | anthropic | openai
-  api.py          FastAPI, 6 routes including /explain
+  api.py          FastAPI, 5 routes including /explain
 corpus/           12 markdown documents, 54 chunks
 eval/
   golden.yaml     42 questions with gold chunk ids
@@ -275,7 +290,7 @@ eval/
   sweep.py        abstain threshold curve
   table.py        the markdown tables above
   results/        committed, so a diff shows a regression
-tests/            29 tests, hash backend, no network
+tests/            35 tests, hash backend, no network
 ```
 
 ## API
@@ -294,6 +309,22 @@ when a result looks wrong, and it has saved more time than any amount of logging
 
 `docker compose up --build` builds the image, indexes at build time so the first request stays off
 the network, and serves on 8000.
+
+## Running the suite in a container
+
+```bash
+docker build --target test -t rag-harness:test .
+docker run --rm --network none rag-harness:test    # ruff, then 35 tests
+```
+
+The test stage carries the dev dependencies and the suite. The image you ship carries neither, and
+it's about 80MB smaller for it. `--network none` isn't decoration: the tests run on the hash
+embedder, so they download nothing, and the flag is what proves it rather than me saying so.
+
+The numbers committed under `eval/results/` were produced inside that container. Run the same seven
+ablations on a macOS host instead and they agree on every headline figure, and disagree on three
+questions out of 42, all of them ties where two chunks scored within a rounding error of each
+other. Two of those moved inside the top three and one moved below it.
 
 ## Configuration
 

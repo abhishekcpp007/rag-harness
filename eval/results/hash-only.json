@@ -1,8 +1,9 @@
 {
   "name": "hash-only",
-  "ran_at": "2026-11-12T15:53:48+00:00",
+  "ran_at": "2026-11-12T18:32:11+00:00",
   "config": {
     "embedder": "hash",
+    "embedder_actual": "hash",
     "embed_model": null,
     "use_dense": true,
     "use_sparse": false,
@@ -19,7 +20,7 @@
     "chunks": 54,
     "embedder": "hash",
     "dims": 512,
-    "seconds": 0.02
+    "seconds": 0.04
   },
   "summary": {
     "answerable_n": 35,
@@ -37,7 +38,7 @@
     "answer_ok": 0.5143,
     "abstained_on_answerable": 0.1143,
     "abstained_on_unanswerable": 0.5714,
-    "ms_per_question": 3.9
+    "ms_per_question": 3.0
   },
   "by_kind": {
     "factual": {

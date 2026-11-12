@@ -1,4 +1,4 @@
-.PHONY: install index test lint eval sweep tables serve docker clean
+.PHONY: install index test lint eval sweep tables serve docker docker-test clean
 
 install:
 	uv venv --python 3.12 .venv || python3 -m venv .venv
@@ -33,6 +33,13 @@ serve:
 
 docker:
 	docker compose up --build
+
+# The same lint and suite the CI docker job runs. No network, so a pass here means the tests
+# really do not touch one.
+docker-test:
+	docker build --target test -t rag-harness:test .
+	docker run --rm --network none rag-harness:test ruff check rag eval tests
+	docker run --rm --network none rag-harness:test pytest -q
 
 clean:
 	rm -rf data/*.sqlite3 .pytest_cache .ruff_cache

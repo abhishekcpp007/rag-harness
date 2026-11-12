@@ -16,6 +16,29 @@ LABEL = {
     "hash-hybrid": "hash embedder plus BM25 fusion",
 }
 KINDS = ["identifier", "semantic", "procedural", "factual"]
+# What each row claims its encoder was. A result file that disagrees does not get rendered.
+EXPECT = {
+    "default": "fastembed", "no-rerank": "fastembed", "no-headings": "fastembed",
+    "hybrid": "fastembed", "sparse-only": "fastembed",
+    "hash-only": "hash", "hash-hybrid": "hash",
+}
+
+
+def check_backend(name: str, result: dict) -> None:
+    """The label says bge-small, so the file had better have been written by bge-small.
+
+    These tables get pasted into the README and then into a conversation with someone deciding
+    whether to hire me. A stale file written by the fallback encoder would sit in that table
+    looking exactly like the real thing, and the only clue would be a number that moved.
+    """
+    actual = (result.get("config", {}).get("embedder_actual")
+              or result.get("index", {}).get("embedder", "unknown"))
+    want = EXPECT.get(name)
+    if want and actual.split(":")[0] != want:
+        raise ValueError(
+            f"{name}.json says it ran on {actual!r}, but this table labels it {want!r}. "
+            f"Rerun it with make eval rather than publishing the wrong encoder."
+        )
 
 
 def load(name):
@@ -25,6 +48,8 @@ def load(name):
 
 def main() -> None:
     rows = [(n, load(n)) for n in ORDER if os.path.exists(os.path.join(HERE, "results", f"{n}.json"))]
+    for n, d in rows:
+        check_backend(n, d)
 
     print("| run | chunk recall@1 | chunk recall@3 | chunk MRR | answer ok | citations on target | ms |")
     print("|---|---|---|---|---|---|---|")

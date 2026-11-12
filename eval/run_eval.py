@@ -30,6 +30,24 @@ from rag.store import Store
 HERE = os.path.dirname(__file__)
 
 
+def assert_embedder(requested: str, actual: str) -> None:
+    """Fail when the backend that ran is not the backend that was asked for.
+
+    `get_embedder` falls back to the hash backend when fastembed is missing, prints one line and
+    carries on. For the service that is a kindness, because a fresh clone still answers. For the
+    eval it is poison: the run writes hash numbers into a file whose config block says bge-small,
+    and the README table reads that file. Caught the first time this ran inside Docker, where an
+    `ENV RAG_EMBEDDER=hash` left over from the test stage quietly turned every ablation into the
+    hash ablation. The numbers were right. The label was a lie.
+    """
+    if actual.split(":")[0] != requested:
+        raise ValueError(
+            f"asked for the {requested!r} embedder and got {actual!r}. An eval run that silently "
+            f"swaps its encoder writes a number nobody can trust: install the extra with "
+            f"pip install '.[embed]', or pass --embedder {actual.split(':')[0]} and mean it"
+        )
+
+
 def load_golden(path: str | None = None) -> list[dict]:
     with open(path or os.path.join(HERE, "golden.yaml"), encoding="utf-8") as fh:
         return yaml.safe_load(fh)
@@ -37,6 +55,7 @@ def load_golden(path: str | None = None) -> list[dict]:
 
 def run(settings, golden: list[dict], *, name: str) -> dict:
     index_stats = ingest(settings)
+    assert_embedder(settings.embedder, index_stats["embedder"])
     store = Store(settings.db_path)
     retriever = Retriever(store=store, embedder=get_embedder(settings), settings=settings)
     llm = get_llm(settings.llm)
@@ -131,6 +150,7 @@ def run(settings, golden: list[dict], *, name: str) -> dict:
         "ran_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "config": {
             "embedder": settings.embedder,
+            "embedder_actual": index_stats["embedder"],
             "embed_model": settings.embed_model if settings.embedder != "hash" else None,
             "use_dense": settings.use_dense,
             "use_sparse": settings.use_sparse,
@@ -159,7 +179,8 @@ def main(argv=None) -> int:
     p.add_argument("--no-rerank", action="store_true")
     p.add_argument("--embedder", default=None)
     p.add_argument("--chunk-words", type=int, default=None)
-    p.add_argument("--abstain-score", type=float, default=None)
+    p.add_argument("--abstain-confidence", type=float, default=None,
+                   help="override the refusal threshold for this run")
     p.add_argument("--out", default=os.path.join(HERE, "results"))
     args = p.parse_args(argv)
 
@@ -178,8 +199,8 @@ def main(argv=None) -> int:
         s = s.with_(embedder=args.embedder)
     if args.chunk_words:
         s = s.with_(chunk_words=args.chunk_words)
-    if args.abstain_score is not None:
-        s = s.with_(abstain_score=args.abstain_score)
+    if args.abstain_confidence is not None:
+        s = s.with_(abstain_confidence=args.abstain_confidence)
     s = s.with_(db_path=os.path.join("data", f"eval-{args.name}.sqlite3"))
 
     result = run(s, load_golden(), name=args.name)
@@ -199,10 +220,6 @@ def main(argv=None) -> int:
     return 0
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
-
-
 def sweep_abstain(settings, golden: list[dict], steps: int = 50) -> dict:
     """Walk the abstain threshold and record what each setting costs.
 
@@ -212,7 +229,7 @@ def sweep_abstain(settings, golden: list[dict], steps: int = 50) -> dict:
     """
     from rag.confidence import confidence
 
-    ingest(settings)
+    assert_embedder(settings.embedder, ingest(settings)["embedder"])
     store = Store(settings.db_path)
     retriever = Retriever(store=store, embedder=get_embedder(settings), settings=settings)
 
@@ -242,3 +259,7 @@ def sweep_abstain(settings, golden: list[dict], steps: int = 50) -> dict:
     return {"embedder": settings.embedder, "n_answerable": n_ans, "n_unanswerable": n_una,
             "wrong_abstain_budget": budget, "best_margin": best, "chosen": chosen,
             "curve": curve}
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

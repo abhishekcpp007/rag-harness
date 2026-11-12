@@ -31,3 +31,26 @@ jobs:
           assert s["chunk_recall@3"] >= 0.70, s["chunk_recall@3"]
           assert s["abstained_on_answerable"] <= 0.20, s["abstained_on_answerable"]
           PY
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: the suite, inside the image, with no network at all
+        run: |
+          docker build --target test -t rag-harness:test .
+          docker run --rm --network none rag-harness:test ruff check rag eval tests
+          docker run --rm --network none rag-harness:test pytest -q
+      - name: the shipped image builds and answers
+        run: |
+          docker build --target runtime -t rag-harness:runtime .
+          docker run -d --name rag -p 8000:8000 rag-harness:runtime
+          for i in $(seq 1 60); do curl -sf localhost:8000/health && break || sleep 2; done
+          curl -sf localhost:8000/health
+          curl -sf -X POST localhost:8000/answer -H 'content-type: application/json' \
+               -d '{"question":"what does NW-4021 mean"}' \
+            | python3 -c "import json,sys; a=json.load(sys.stdin); assert not a['abstained'] and a['citations'], a"
+          curl -sf -X POST localhost:8000/answer -H 'content-type: application/json' \
+               -d '{"question":"how do I issue a virtual card to an employee"}' \
+            | python3 -c "import json,sys; a=json.load(sys.stdin); assert a['abstained'], a"
+          docker rm -f rag

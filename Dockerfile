@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -13,6 +13,21 @@ RUN pip install --no-cache-dir -e ".[embed]"
 
 COPY corpus ./corpus
 COPY eval ./eval
+
+# The test stage. Dev deps and the suite land here and nowhere else, so the image you ship stays
+# small. Build it with: docker build --target test -t rag-harness:test .
+FROM base AS test
+
+RUN pip install --no-cache-dir -e ".[dev]"
+COPY tests ./tests
+
+# Hash embedder, so the suite needs no model download and no network at all.
+ENV RAG_EMBEDDER=hash \
+    RAG_DB_PATH=/tmp/test-index.sqlite3
+
+CMD ["sh", "-c", "ruff check rag eval tests && pytest -q"]
+
+FROM base AS runtime
 
 # Index at build time so the container starts answering immediately. The model weights land in
 # the image too, which keeps the first request off the network.

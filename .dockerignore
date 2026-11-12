@@ -1,0 +1,13 @@
+.venv/
+venv/
+.git/
+.github/
+data/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.env
+.DS_Store
+README.md.bak

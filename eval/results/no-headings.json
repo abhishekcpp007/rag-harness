@@ -1,8 +1,9 @@
 {
   "name": "no-headings",
-  "ran_at": "2026-11-12T15:53:32+00:00",
+  "ran_at": "2026-11-12T18:33:32+00:00",
   "config": {
     "embedder": "fastembed",
+    "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
     "embed_model": "BAAI/bge-small-en-v1.5",
     "use_dense": true,
     "use_sparse": false,
@@ -19,7 +20,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 4.34
+    "seconds": 4.43
   },
   "summary": {
     "answerable_n": 35,
@@ -31,13 +32,13 @@
     "ndcg@5": 0.8775,
     "chunk_recall@1": 0.8,
     "chunk_recall@3": 0.8571,
-    "chunk_recall@5": 0.9143,
-    "chunk_mrr": 0.8414,
+    "chunk_recall@5": 0.8857,
+    "chunk_mrr": 0.8357,
     "citation_support": 0.7031,
     "answer_ok": 0.5714,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 26.0
+    "ms_per_question": 21.9
   },
   "by_kind": {
     "factual": {
@@ -69,7 +70,7 @@
       "recall@3": 0.7778,
       "mrr": 0.5833,
       "chunk_recall@3": 0.4444,
-      "chunk_mrr": 0.4389,
+      "chunk_mrr": 0.4167,
       "answer_ok": 0.3333
     },
     "unanswerable": {
@@ -632,20 +633,21 @@
       "retrieved_docs": [
         "06-runbook-settlement-stall",
         "02-charges-api",
-        "04-webhooks"
+        "04-webhooks",
+        "01-platform-overview"
       ],
       "confidence": 0.3264,
       "retrieved_chunks": [
         "06-runbook-settlement-stall#2",
         "02-charges-api#4",
         "04-webhooks#5",
-        "02-charges-api#3",
-        "02-charges-api#1"
+        "01-platform-overview#2",
+        "02-charges-api#3"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 0.0,
-      "chunk_recall@5": 1.0,
-      "chunk_mrr": 0.2,
+      "chunk_recall@5": 0.0,
+      "chunk_mrr": 0.0,
       "recall@1": 0.0,
       "recall@3": 1.0,
       "recall@5": 1.0,
@@ -1184,7 +1186,8 @@
       "retrieved_docs": [
         "01-platform-overview",
         "03-error-codes",
-        "05-settlement"
+        "05-settlement",
+        "02-charges-api"
       ],
       "confidence": 0.8479,
       "retrieved_chunks": [
@@ -1192,7 +1195,7 @@
         "03-error-codes#2",
         "01-platform-overview#2",
         "05-settlement#4",
-        "03-error-codes#1"
+        "02-charges-api#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
