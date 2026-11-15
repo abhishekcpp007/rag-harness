@@ -35,7 +35,19 @@ class Settings:
     final_k: int = _int("RAG_FINAL_K", 5)
     use_dense: bool = os.getenv("RAG_USE_DENSE", "1") == "1"
     use_sparse: bool = os.getenv("RAG_USE_SPARSE", "0") == "1"
-    rerank: str = os.getenv("RAG_RERANK", "lexical")  # none | lexical
+    rerank: str = os.getenv("RAG_RERANK", "lexical")  # none | lexical | cross | cross+lexical
+    rerank_model: str = os.getenv("RAG_RERANK_MODEL", "Xenova/ms-marco-MiniLM-L-6-v2")
+    # How many fused candidates the reranker gets to look at. The lexical pass is free so it
+    # sees whatever fusion returned; the cross encoder is priced per pair, so it gets a budget.
+    rerank_candidates: int = _int("RAG_RERANK_CANDIDATES", 20)
+    # RRF constant for cross+lexical. Smaller than the retrieval-side 60 on purpose: with only
+    # two rankers over 20 candidates, k=60 flattens them into near agreement with everything.
+    rerank_rrf_k: int = _int("RAG_RERANK_RRF_K", 10)
+
+    # query expansion: none | prf (pseudo-relevance feedback, see rag/retrieve.py)
+    expansion: str = os.getenv("RAG_EXPANSION", "prf")
+    prf_docs: int = _int("RAG_PRF_DOCS", 3)
+    prf_beta: float = _float("RAG_PRF_BETA", 0.4)
 
     # answering
     llm: str = os.getenv("RAG_LLM", "extractive")

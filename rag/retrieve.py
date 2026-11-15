@@ -21,8 +21,8 @@ import numpy as np
 from .bm25 import BM25
 from .config import Settings
 from .embedding import Embedder
+from .rerank import Reranker, get_reranker
 from .store import Hit, Store
-from .tokenize import tokenize
 
 
 @dataclass
@@ -31,6 +31,7 @@ class Retriever:
     embedder: Embedder
     settings: Settings
     bm25: BM25 | None = None
+    reranker: Reranker | None = None
 
     def __post_init__(self) -> None:
         if not (self.settings.use_dense or self.settings.use_sparse):
@@ -42,6 +43,8 @@ class Retriever:
             )
         if self.bm25 is None:
             self.bm25 = self._build_bm25()
+        if self.reranker is None:
+            self.reranker = get_reranker(self.settings)
 
     def _build_bm25(self) -> BM25:
         b = BM25()
@@ -58,12 +61,38 @@ class Retriever:
         if mat is None or not len(mat):
             return []
         q = self.embedder.encode([query])[0]
+        if self.settings.expansion == "prf":
+            q = self._expand(q, mat)
         sims = mat @ q
         k = min(k, len(sims))
         idx = np.argpartition(-sims, k - 1)[:k]
         idx = idx[np.argsort(-sims[idx])]
         ids = self.store.vector_ids
         return [(ids[i], float(sims[i])) for i in idx]
+
+    def _expand(self, q: np.ndarray, mat: np.ndarray) -> np.ndarray:
+        """Pseudo-relevance feedback, the Rocchio move, done in the embedding space.
+
+        The golden set's worst category is semantic, and reading its failures says why: someone
+        asks what stops "a double tap on the pay button" from charging twice and the handbook
+        says "idempotency key". No encoder bridges that on its own, because the two share no
+        vocabulary. So retrieve once, assume the top few chunks are roughly on topic, and pull
+        the query vector toward their centroid before retrieving for real.
+
+        It costs one extra matrix multiply against an index that is already in memory, and it
+        can also drag a query that started off topic further off. Which way it goes is a number,
+        not an opinion, and the number is in the README table.
+        """
+        s = self.settings
+        sims = mat @ q
+        m = min(s.prf_docs, len(sims))
+        if m <= 0:
+            return q
+        idx = np.argpartition(-sims, m - 1)[:m]
+        centroid = mat[idx].mean(axis=0)
+        qp = q + s.prf_beta * centroid
+        n = float(np.linalg.norm(qp))
+        return qp / n if n else q
 
     def sparse(self, query: str, k: int) -> list[tuple[str, float]]:
         return self.bm25.search(query, k)
@@ -86,8 +115,11 @@ class Retriever:
             runs["sparse"] = self.sparse(query, s.sparse_k)
 
         fused = rrf(runs, k=s.rrf_k)
+        # The reranker can only fix an ordering it can see, so the pool it gets is wider than
+        # the k we return. For the cross encoder that pool is also the per-query cost.
+        pool = max(k * 3, k, s.rerank_candidates if s.rerank.startswith("cross") else 0)
         hits = []
-        for chunk_id, score, signals in fused[: max(k * 3, k)]:
+        for chunk_id, score, signals in fused[:pool]:
             row = self.store.chunk(chunk_id)
             if row is None:
                 continue
@@ -102,9 +134,7 @@ class Retriever:
                 )
             )
 
-        if s.rerank == "lexical":
-            hits = lexical_rerank(query, hits)
-        return hits[:k]
+        return self.reranker.rerank(query, hits)[:k]
 
 
 def rrf(runs: dict[str, list[tuple[str, float]]], k: int = 60):
@@ -118,27 +148,3 @@ def rrf(runs: dict[str, list[tuple[str, float]]], k: int = 60):
     out = [(cid, score, where[cid]) for cid, score in acc.items()]
     out.sort(key=lambda x: (-x[1], x[0]))
     return out
-
-
-def lexical_rerank(query: str, hits: list[Hit]) -> list[Hit]:
-    """A cheap final pass that pushes exact term and identifier matches up.
-
-    A cross encoder would do this better and costs a model load plus roughly 40ms per query. On a
-    corpus this size the overlap bonus recovered most of the same ranking, so the heavier model is
-    left out until the eval says it is needed.
-    """
-    q = set(tokenize(query))
-    if not q:
-        return hits
-    rescored = []
-    for h in hits:
-        toks = set(tokenize(f"{h.heading_path} {h.text}"))
-        overlap = len(q & toks) / len(q)
-        has_id = any(c.isdigit() for t in (q & toks) for c in t)
-        bonus = 0.25 * overlap + (0.15 if has_id else 0.0)
-        h.signals = dict(h.signals, rerank={"overlap": round(overlap, 3), "bonus": round(bonus, 3)})
-        rescored.append((h.score * (1 + bonus), h))
-    rescored.sort(key=lambda x: -x[0])
-    for score, h in rescored:
-        h.score = score
-    return [h for _, h in rescored]

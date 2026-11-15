@@ -15,7 +15,10 @@ lint:
 
 eval:
 	.venv/bin/python -m eval.run_eval --name default
+	.venv/bin/python -m eval.run_eval --name no-expansion --expansion none
 	.venv/bin/python -m eval.run_eval --name no-rerank --no-rerank
+	.venv/bin/python -m eval.run_eval --name cross-rerank --rerank cross
+	.venv/bin/python -m eval.run_eval --name cross-lex --rerank cross+lexical
 	.venv/bin/python -m eval.run_eval --name no-headings --no-headings
 	.venv/bin/python -m eval.run_eval --name hybrid --with-sparse
 	.venv/bin/python -m eval.run_eval --name sparse-only --no-dense --with-sparse

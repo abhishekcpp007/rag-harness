@@ -155,6 +155,11 @@ def run(settings, golden: list[dict], *, name: str) -> dict:
             "use_dense": settings.use_dense,
             "use_sparse": settings.use_sparse,
             "rerank": settings.rerank,
+            "expansion": settings.expansion,
+            "prf_beta": settings.prf_beta if settings.expansion == "prf" else None,
+            "prf_docs": settings.prf_docs if settings.expansion == "prf" else None,
+            "rerank_model": settings.rerank_model if settings.rerank.startswith("cross") else None,
+            "rerank_candidates": settings.rerank_candidates if settings.rerank.startswith("cross") else None,
             "carry_heading_path": settings.carry_heading_path,
             "chunk_words": settings.chunk_words,
             "chunk_overlap": settings.chunk_overlap,
@@ -177,6 +182,10 @@ def main(argv=None) -> int:
     p.add_argument("--with-sparse", action="store_true", help="BM25 is off by default, see README")
     p.add_argument("--no-headings", action="store_true")
     p.add_argument("--no-rerank", action="store_true")
+    p.add_argument("--rerank", default=None, choices=["none", "lexical", "cross", "cross+lexical"],
+                   help="which final pass to run, see rag/rerank.py")
+    p.add_argument("--expansion", default=None, choices=["none", "prf"],
+                   help="pull the query vector toward the first pass centroid before retrieving")
     p.add_argument("--embedder", default=None)
     p.add_argument("--chunk-words", type=int, default=None)
     p.add_argument("--abstain-confidence", type=float, default=None,
@@ -195,6 +204,10 @@ def main(argv=None) -> int:
         s = s.with_(carry_heading_path=False)
     if args.no_rerank:
         s = s.with_(rerank="none")
+    if args.rerank:
+        s = s.with_(rerank=args.rerank)
+    if args.expansion:
+        s = s.with_(expansion=args.expansion)
     if args.embedder:
         s = s.with_(embedder=args.embedder)
     if args.chunk_words:
@@ -255,7 +268,16 @@ def sweep_abstain(settings, golden: list[dict], steps: int = 50) -> dict:
     # that budget, take the threshold that catches the most unanswerable questions.
     budget = 0.125
     allowed = [r for r in curve if r["abstained_on_answerable"] <= budget]
-    chosen = max(allowed, key=lambda r: (r["abstained_on_unanswerable"], r["threshold"]))
+    # Tie-break downward, not upward. The first version of this line read
+    # `max(..., key=(catch, threshold))`, which on a tie took the *highest* threshold that still
+    # caught the most unanswerable questions. Two settings caught 71 percent here, 0.34 and 0.36,
+    # and the rule picked 0.36, which refuses 11 percent of answerable questions where 0.34
+    # refuses 9 percent. Same benefit, more harm, chosen on purpose by a sort key nobody reread.
+    best_catch = max((r["abstained_on_unanswerable"] for r in allowed), default=0.0)
+    chosen = min(
+        (r for r in allowed if r["abstained_on_unanswerable"] == best_catch),
+        key=lambda r: (r["abstained_on_answerable"], r["threshold"]),
+    )
     return {"embedder": settings.embedder, "n_answerable": n_ans, "n_unanswerable": n_una,
             "wrong_abstain_budget": budget, "best_margin": best, "chosen": chosen,
             "curve": curve}

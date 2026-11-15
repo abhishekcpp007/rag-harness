@@ -1,6 +1,6 @@
 {
   "name": "sparse-only",
-  "ran_at": "2026-11-12T18:32:10+00:00",
+  "ran_at": "2026-11-14T19:23:45+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -8,6 +8,11 @@
     "use_dense": false,
     "use_sparse": true,
     "rerank": "lexical",
+    "expansion": "prf",
+    "prf_beta": 0.4,
+    "prf_docs": 3,
+    "rerank_model": null,
+    "rerank_candidates": null,
     "carry_heading_path": true,
     "chunk_words": 180,
     "chunk_overlap": 40,
@@ -20,7 +25,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 5.12
+    "seconds": 1.59
   },
   "summary": {
     "answerable_n": 35,
@@ -38,7 +43,7 @@
     "answer_ok": 0.5143,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.5714,
-    "ms_per_question": 2.7
+    "ms_per_question": 2.1
   },
   "by_kind": {
     "factual": {

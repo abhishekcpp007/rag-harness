@@ -1,6 +1,6 @@
 {
   "name": "no-headings",
-  "ran_at": "2026-11-12T18:33:32+00:00",
+  "ran_at": "2026-11-14T19:23:41+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -8,6 +8,11 @@
     "use_dense": true,
     "use_sparse": false,
     "rerank": "lexical",
+    "expansion": "prf",
+    "prf_beta": 0.4,
+    "prf_docs": 3,
+    "rerank_model": null,
+    "rerank_candidates": null,
     "carry_heading_path": false,
     "chunk_words": 180,
     "chunk_overlap": 40,
@@ -20,25 +25,25 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 4.43
+    "seconds": 1.6
   },
   "summary": {
     "answerable_n": 35,
     "unanswerable_n": 7,
     "recall@1": 0.8286,
     "recall@3": 0.9429,
-    "recall@5": 0.9714,
-    "mrr": 0.8929,
-    "ndcg@5": 0.8775,
+    "recall@5": 0.9429,
+    "mrr": 0.8857,
+    "ndcg@5": 0.8652,
     "chunk_recall@1": 0.8,
     "chunk_recall@3": 0.8571,
     "chunk_recall@5": 0.8857,
-    "chunk_mrr": 0.8357,
-    "citation_support": 0.7031,
+    "chunk_mrr": 0.8295,
+    "citation_support": 0.6719,
     "answer_ok": 0.5714,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 21.9
+    "ms_per_question": 10.6
   },
   "by_kind": {
     "factual": {
@@ -47,7 +52,7 @@
       "mrr": 1.0,
       "chunk_recall@3": 1.0,
       "chunk_mrr": 1.0,
-      "answer_ok": 0.5833
+      "answer_ok": 0.5
     },
     "identifier": {
       "n": 6,
@@ -68,10 +73,10 @@
     "semantic": {
       "n": 9,
       "recall@3": 0.7778,
-      "mrr": 0.5833,
+      "mrr": 0.5556,
       "chunk_recall@3": 0.4444,
-      "chunk_mrr": 0.4167,
-      "answer_ok": 0.3333
+      "chunk_mrr": 0.3926,
+      "answer_ok": 0.4444
     },
     "unanswerable": {
       "n": 7,
@@ -98,7 +103,7 @@
         "03-error-codes#1",
         "02-charges-api#1",
         "03-error-codes#2",
-        "10-sandbox-testing#0"
+        "10-sandbox-testing#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -166,7 +171,8 @@
       ],
       "retrieved_docs": [
         "03-error-codes",
-        "02-charges-api"
+        "02-charges-api",
+        "10-sandbox-testing"
       ],
       "confidence": 0.7223,
       "retrieved_chunks": [
@@ -174,7 +180,7 @@
         "02-charges-api#1",
         "03-error-codes#2",
         "03-error-codes#3",
-        "03-error-codes#0"
+        "10-sandbox-testing#0"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -187,12 +193,12 @@
       "ndcg@5": 1.0,
       "abstained": false,
       "abstain_correct": true,
-      "citation_support": 1.0,
+      "citation_support": 0.5,
       "answer_ok": true,
-      "answer": "| NW-4090 | Idempotency key replayed with a different body | Use a fresh key | [1] Every error response carries a stable `code`, a human `message` and a `request_id`. [5]",
+      "answer": "| NW-4090 | Idempotency key replayed with a different body | Use a fresh key | [1] Replaying a key with a different body returns `NW-4090` and does not create a second charge. [2]",
       "citations": [
         "03-error-codes",
-        "03-error-codes"
+        "02-charges-api"
       ]
     },
     {
@@ -204,7 +210,8 @@
       ],
       "retrieved_docs": [
         "03-error-codes",
-        "02-charges-api"
+        "02-charges-api",
+        "01-platform-overview"
       ],
       "confidence": 0.8067,
       "retrieved_chunks": [
@@ -212,7 +219,7 @@
         "03-error-codes#2",
         "02-charges-api#1",
         "02-charges-api#3",
-        "03-error-codes#0"
+        "01-platform-overview#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -225,11 +232,12 @@
       "ndcg@5": 1.0,
       "abstained": false,
       "abstain_correct": true,
-      "citation_support": 1.0,
+      "citation_support": 0.5,
       "answer_ok": true,
-      "answer": "| NW-4012 | API key revoked | Rotate the key in the dashboard | [1] | NW-4011 | API key missing or malformed | Send `Authorization: Bearer nw_live_...` | [1]",
+      "answer": "| NW-4012 | API key revoked | Rotate the key in the dashboard | [1] A charge arrives at `gateway`, which checks the API key with `authz` and applies the merchant rate limit. [5]",
       "citations": [
-        "03-error-codes"
+        "03-error-codes",
+        "01-platform-overview"
       ]
     },
     {
@@ -243,7 +251,7 @@
         "10-sandbox-testing",
         "03-error-codes",
         "12-glossary",
-        "09-payouts"
+        "11-onboarding-and-kyc"
       ],
       "confidence": 0.9167,
       "retrieved_chunks": [
@@ -251,7 +259,7 @@
         "03-error-codes#3",
         "03-error-codes#2",
         "12-glossary#0",
-        "09-payouts#1"
+        "11-onboarding-and-kyc#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -286,8 +294,8 @@
       "confidence": 0.7575,
       "retrieved_chunks": [
         "03-error-codes#1",
-        "10-sandbox-testing#0",
         "03-error-codes#3",
+        "10-sandbox-testing#0",
         "03-error-codes#2",
         "02-charges-api#1"
       ],
@@ -358,16 +366,15 @@
       ],
       "retrieved_docs": [
         "09-payouts",
-        "07-refunds-and-disputes",
-        "05-settlement"
+        "07-refunds-and-disputes"
       ],
       "confidence": 0.6346,
       "retrieved_chunks": [
         "09-payouts#3",
         "09-payouts#0",
         "07-refunds-and-disputes#0",
-        "05-settlement#0",
-        "09-payouts#1"
+        "09-payouts#1",
+        "09-payouts#4"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -398,21 +405,20 @@
       "retrieved_docs": [
         "03-error-codes",
         "04-webhooks",
-        "06-runbook-settlement-stall",
-        "02-charges-api"
+        "06-runbook-settlement-stall"
       ],
       "confidence": 0.3572,
       "retrieved_chunks": [
         "03-error-codes#0",
         "04-webhooks#5",
         "06-runbook-settlement-stall#3",
-        "04-webhooks#2",
-        "02-charges-api#1"
+        "06-runbook-settlement-stall#2",
+        "04-webhooks#2"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 0.0,
       "chunk_recall@5": 1.0,
-      "chunk_mrr": 0.25,
+      "chunk_mrr": 0.2,
       "recall@1": 0.0,
       "recall@3": 1.0,
       "recall@5": 1.0,
@@ -422,7 +428,7 @@
       "abstain_correct": true,
       "citation_support": 0.5,
       "answer_ok": true,
-      "answer": "Deliveries are at least once. [4] The message text changes without notice. [1]",
+      "answer": "Deliveries are at least once. [5] The message text changes without notice. [1]",
       "citations": [
         "03-error-codes",
         "04-webhooks"
@@ -438,17 +444,17 @@
       "retrieved_docs": [
         "10-sandbox-testing",
         "04-webhooks",
-        "02-charges-api",
         "06-runbook-settlement-stall",
-        "03-error-codes"
+        "02-charges-api",
+        "01-platform-overview"
       ],
       "confidence": 0.2244,
       "retrieved_chunks": [
         "10-sandbox-testing#3",
         "04-webhooks#5",
-        "02-charges-api#3",
         "06-runbook-settlement-stall#2",
-        "03-error-codes#2"
+        "02-charges-api#3",
+        "01-platform-overview#2"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 0.0,
@@ -476,21 +482,20 @@
       "retrieved_docs": [
         "09-payouts",
         "07-refunds-and-disputes",
-        "05-settlement",
         "11-onboarding-and-kyc"
       ],
       "confidence": 0.445,
       "retrieved_chunks": [
         "09-payouts#3",
-        "07-refunds-and-disputes#1",
         "07-refunds-and-disputes#0",
-        "05-settlement#0",
-        "11-onboarding-and-kyc#3"
+        "07-refunds-and-disputes#1",
+        "11-onboarding-and-kyc#2",
+        "09-payouts#1"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 1.0,
       "chunk_recall@5": 1.0,
-      "chunk_mrr": 0.5,
+      "chunk_mrr": 0.3333333333333333,
       "recall@1": 0.0,
       "recall@3": 1.0,
       "recall@5": 1.0,
@@ -498,12 +503,12 @@
       "ndcg@5": 0.6309297535714575,
       "abstained": false,
       "abstain_correct": true,
-      "citation_support": 0.0,
-      "answer_ok": false,
-      "answer": "A `returned` payout means the beneficiary bank sent the money back, usually a closed account or a wrong IFSC. [1] Money reaches the merchant bank account on T+2 for India and T+1 for Singapore, counting business days only. [4]",
+      "citation_support": 0.5,
+      "answer_ok": true,
+      "answer": "A `returned` payout means the beneficiary bank sent the money back, usually a closed account or a wrong IFSC. [1] A dispute opens when the cardholder's bank raises a chargeback. [3]",
       "citations": [
         "09-payouts",
-        "05-settlement"
+        "07-refunds-and-disputes"
       ]
     },
     {
@@ -515,17 +520,17 @@
       ],
       "retrieved_docs": [
         "02-charges-api",
+        "06-runbook-settlement-stall",
         "04-webhooks",
-        "08-rate-limits",
-        "07-refunds-and-disputes"
+        "08-rate-limits"
       ],
-      "confidence": 0.2329,
+      "confidence": 0.3163,
       "retrieved_chunks": [
         "02-charges-api#3",
+        "06-runbook-settlement-stall#2",
         "04-webhooks#2",
         "08-rate-limits#1",
-        "04-webhooks#5",
-        "07-refunds-and-disputes#0"
+        "04-webhooks#5"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 0.0,
@@ -533,9 +538,9 @@
       "chunk_mrr": 0.0,
       "recall@1": 0.0,
       "recall@3": 0.0,
-      "recall@5": 1.0,
-      "mrr": 0.25,
-      "ndcg@5": 0.43067655807339306,
+      "recall@5": 0.0,
+      "mrr": 0.0,
+      "ndcg@5": 0.0,
       "abstained": true,
       "abstain_correct": false,
       "citation_support": NaN,
@@ -553,16 +558,16 @@
       "retrieved_docs": [
         "01-platform-overview",
         "05-settlement",
-        "11-onboarding-and-kyc",
-        "12-glossary"
+        "12-glossary",
+        "11-onboarding-and-kyc"
       ],
       "confidence": 0.3884,
       "retrieved_chunks": [
         "01-platform-overview#4",
         "05-settlement#0",
         "01-platform-overview#0",
-        "11-onboarding-and-kyc#2",
-        "12-glossary#0"
+        "12-glossary#0",
+        "11-onboarding-and-kyc#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -577,7 +582,7 @@
       "abstain_correct": true,
       "citation_support": 0.0,
       "answer_ok": false,
-      "answer": "Money reaches the merchant bank account on T+2 for India and T+1 for Singapore, counting business days only. [2] networks. Northwind uses ICICI in India and DBS in Singapore. [5]",
+      "answer": "Money reaches the merchant bank account on T+2 for India and T+1 for Singapore, counting business days only. [2] networks. Northwind uses ICICI in India and DBS in Singapore. [4]",
       "citations": [
         "05-settlement",
         "12-glossary"
@@ -594,15 +599,16 @@
         "01-platform-overview",
         "08-rate-limits",
         "09-payouts",
-        "02-charges-api"
+        "02-charges-api",
+        "07-refunds-and-disputes"
       ],
       "confidence": 0.3959,
       "retrieved_chunks": [
         "01-platform-overview#1",
         "08-rate-limits#2",
-        "09-payouts#0",
+        "09-payouts#4",
         "02-charges-api#3",
-        "09-payouts#4"
+        "07-refunds-and-disputes#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -676,8 +682,8 @@
         "06-runbook-settlement-stall#0",
         "06-runbook-settlement-stall#2",
         "06-runbook-settlement-stall#3",
-        "05-settlement#1",
-        "05-settlement#2"
+        "05-settlement#2",
+        "05-settlement#1"
       ],
       "chunk_recall@1": 0.0,
       "chunk_recall@3": 1.0,
@@ -708,7 +714,6 @@
       "retrieved_docs": [
         "06-runbook-settlement-stall",
         "01-platform-overview",
-        "04-webhooks",
         "03-error-codes"
       ],
       "confidence": 0.8277,
@@ -716,7 +721,7 @@
         "06-runbook-settlement-stall#2",
         "06-runbook-settlement-stall#3",
         "01-platform-overview#2",
-        "04-webhooks#4",
+        "03-error-codes#3",
         "03-error-codes#1"
       ],
       "chunk_recall@1": 1.0,
@@ -749,15 +754,16 @@
         "07-refunds-and-disputes",
         "02-charges-api",
         "05-settlement",
-        "09-payouts"
+        "09-payouts",
+        "06-runbook-settlement-stall"
       ],
       "confidence": 0.4859,
       "retrieved_chunks": [
         "07-refunds-and-disputes#0",
         "02-charges-api#3",
         "05-settlement#3",
-        "02-charges-api#1",
-        "09-payouts#3"
+        "09-payouts#3",
+        "06-runbook-settlement-stall#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -788,16 +794,16 @@
       "retrieved_docs": [
         "08-rate-limits",
         "06-runbook-settlement-stall",
-        "04-webhooks",
-        "02-charges-api"
+        "03-error-codes",
+        "05-settlement"
       ],
       "confidence": 0.4072,
       "retrieved_chunks": [
         "08-rate-limits#1",
-        "06-runbook-settlement-stall#2",
         "08-rate-limits#0",
-        "04-webhooks#5",
-        "02-charges-api#3"
+        "06-runbook-settlement-stall#2",
+        "03-error-codes#2",
+        "05-settlement#4"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -812,7 +818,7 @@
       "abstain_correct": true,
       "citation_support": 1.0,
       "answer_ok": false,
-      "answer": "Exceeding the limit returns HTTP 429 with code `NW-4029` and a `Retry-After` header in seconds. [3] Do not retry a 429 on a write without the original `Idempotency-Key`. [1]",
+      "answer": "Exceeding the limit returns HTTP 429 with code `NW-4029` and a `Retry-After` header in seconds. [2] Do not retry a 429 on a write without the original `Idempotency-Key`. [1]",
       "citations": [
         "08-rate-limits",
         "08-rate-limits"
@@ -828,15 +834,16 @@
       "retrieved_docs": [
         "10-sandbox-testing",
         "02-charges-api",
-        "05-settlement"
+        "05-settlement",
+        "04-webhooks"
       ],
       "confidence": 0.8571,
       "retrieved_chunks": [
         "10-sandbox-testing#2",
         "02-charges-api#3",
+        "05-settlement#2",
         "02-charges-api#2",
-        "02-charges-api#1",
-        "05-settlement#2"
+        "04-webhooks#3"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -867,16 +874,15 @@
       "retrieved_docs": [
         "05-settlement",
         "09-payouts",
-        "01-platform-overview",
-        "04-webhooks"
+        "01-platform-overview"
       ],
       "confidence": 0.7778,
       "retrieved_chunks": [
         "05-settlement#4",
         "09-payouts#2",
         "01-platform-overview#4",
-        "09-payouts#1",
-        "04-webhooks#5"
+        "01-platform-overview#1",
+        "09-payouts#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -953,8 +959,8 @@
         "11-onboarding-and-kyc#1",
         "01-platform-overview#1",
         "01-platform-overview#2",
-        "03-error-codes#1",
-        "11-onboarding-and-kyc#3"
+        "11-onboarding-and-kyc#3",
+        "03-error-codes#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -985,7 +991,6 @@
         "05-settlement",
         "10-sandbox-testing",
         "01-platform-overview",
-        "06-runbook-settlement-stall",
         "12-glossary"
       ],
       "confidence": 0.8363,
@@ -993,7 +998,7 @@
         "05-settlement#1",
         "10-sandbox-testing#4",
         "01-platform-overview#4",
-        "06-runbook-settlement-stall#2",
+        "05-settlement#4",
         "12-glossary#1"
       ],
       "chunk_recall@1": 1.0,
@@ -1025,7 +1030,8 @@
       "retrieved_docs": [
         "08-rate-limits",
         "10-sandbox-testing",
-        "01-platform-overview"
+        "01-platform-overview",
+        "02-charges-api"
       ],
       "confidence": 0.8571,
       "retrieved_chunks": [
@@ -1033,7 +1039,7 @@
         "10-sandbox-testing#4",
         "08-rate-limits#1",
         "01-platform-overview#1",
-        "08-rate-limits#2"
+        "02-charges-api#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -1154,7 +1160,7 @@
         "12-glossary#0",
         "05-settlement#0",
         "01-platform-overview#0",
-        "01-platform-overview#4",
+        "12-glossary#1",
         "03-error-codes#3"
       ],
       "chunk_recall@1": 1.0,
@@ -1187,7 +1193,7 @@
         "01-platform-overview",
         "03-error-codes",
         "05-settlement",
-        "02-charges-api"
+        "12-glossary"
       ],
       "confidence": 0.8479,
       "retrieved_chunks": [
@@ -1195,7 +1201,7 @@
         "03-error-codes#2",
         "01-platform-overview#2",
         "05-settlement#4",
-        "02-charges-api#1"
+        "12-glossary#0"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -1273,7 +1279,7 @@
         "06-runbook-settlement-stall#2",
         "02-charges-api#2",
         "09-payouts#1",
-        "03-error-codes#0"
+        "03-error-codes#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -1286,11 +1292,12 @@
       "ndcg@5": 0.6131471927654584,
       "abstained": false,
       "abstain_correct": true,
-      "citation_support": 1.0,
-      "answer_ok": true,
-      "answer": "The `Idempotency-Key` header is required on every write. [1] Keys live for 24 hours. [1]",
+      "citation_support": 0.5,
+      "answer_ok": false,
+      "answer": "The `Idempotency-Key` header is required on every write. [1] | NW-4090 | Idempotency key replayed with a different body | Use a fresh key | [5]",
       "citations": [
-        "02-charges-api"
+        "02-charges-api",
+        "03-error-codes"
       ]
     },
     {
@@ -1348,9 +1355,9 @@
       "retrieved_chunks": [
         "11-onboarding-and-kyc#2",
         "11-onboarding-and-kyc#4",
-        "11-onboarding-and-kyc#0",
         "01-platform-overview#2",
-        "07-refunds-and-disputes#0"
+        "07-refunds-and-disputes#0",
+        "07-refunds-and-disputes#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -1381,6 +1388,7 @@
       "retrieved_docs": [
         "11-onboarding-and-kyc",
         "07-refunds-and-disputes",
+        "03-error-codes",
         "09-payouts"
       ],
       "confidence": 0.8098,
@@ -1388,8 +1396,8 @@
         "11-onboarding-and-kyc#4",
         "07-refunds-and-disputes#2",
         "11-onboarding-and-kyc#2",
-        "09-payouts#4",
-        "07-refunds-and-disputes#1"
+        "03-error-codes#3",
+        "09-payouts#4"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -1427,7 +1435,7 @@
         "05-settlement#4",
         "06-runbook-settlement-stall#2",
         "12-glossary#0",
-        "06-runbook-settlement-stall#3",
+        "12-glossary#1",
         "05-settlement#2"
       ],
       "chunk_recall@1": 1.0,
@@ -1458,7 +1466,7 @@
         "07-refunds-and-disputes",
         "02-charges-api",
         "01-platform-overview",
-        "09-payouts"
+        "06-runbook-settlement-stall"
       ],
       "confidence": 0.3255,
       "retrieved_chunks": [
@@ -1466,7 +1474,7 @@
         "02-charges-api#3",
         "01-platform-overview#2",
         "02-charges-api#1",
-        "09-payouts#1"
+        "06-runbook-settlement-stall#2"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1501,7 +1509,7 @@
         "01-platform-overview#2",
         "06-runbook-settlement-stall#2",
         "11-onboarding-and-kyc#4",
-        "09-payouts#2"
+        "11-onboarding-and-kyc#2"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1526,17 +1534,18 @@
       "gold_docs": [],
       "retrieved_docs": [
         "01-platform-overview",
-        "02-charges-api",
         "03-error-codes",
-        "04-webhooks"
+        "02-charges-api",
+        "04-webhooks",
+        "12-glossary"
       ],
       "confidence": 0.2565,
       "retrieved_chunks": [
         "01-platform-overview#0",
-        "02-charges-api#0",
         "03-error-codes#3",
+        "02-charges-api#0",
         "04-webhooks#1",
-        "04-webhooks#2"
+        "12-glossary#0"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1562,16 +1571,16 @@
       "retrieved_docs": [
         "07-refunds-and-disputes",
         "11-onboarding-and-kyc",
-        "01-platform-overview",
         "03-error-codes",
+        "01-platform-overview",
         "12-glossary"
       ],
       "confidence": 0.4717,
       "retrieved_chunks": [
         "07-refunds-and-disputes#0",
         "11-onboarding-and-kyc#2",
-        "01-platform-overview#0",
         "03-error-codes#3",
+        "01-platform-overview#0",
         "12-glossary#0"
       ],
       "chunk_recall@1": NaN,
@@ -1587,7 +1596,7 @@
       "abstain_correct": false,
       "citation_support": NaN,
       "answer_ok": null,
-      "answer": "The Northwind processing fee on the original charge is **not** returned on a refund. [1] Northwind is a card acquiring and payouts platform for marketplaces in India and Singapore. [3]",
+      "answer": "The Northwind processing fee on the original charge is **not** returned on a refund. [1] Northwind is a card acquiring and payouts platform for marketplaces in India and Singapore. [4]",
       "citations": [
         "07-refunds-and-disputes",
         "01-platform-overview"
@@ -1601,17 +1610,17 @@
       "retrieved_docs": [
         "10-sandbox-testing",
         "02-charges-api",
-        "09-payouts",
         "03-error-codes",
-        "11-onboarding-and-kyc"
+        "11-onboarding-and-kyc",
+        "01-platform-overview"
       ],
       "confidence": 0.2764,
       "retrieved_chunks": [
         "10-sandbox-testing#1",
         "02-charges-api#1",
-        "09-payouts#4",
         "03-error-codes#1",
-        "11-onboarding-and-kyc#2"
+        "11-onboarding-and-kyc#2",
+        "01-platform-overview#2"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1637,16 +1646,16 @@
       "retrieved_docs": [
         "05-settlement",
         "04-webhooks",
-        "08-rate-limits",
-        "03-error-codes"
+        "03-error-codes",
+        "10-sandbox-testing"
       ],
       "confidence": 0.2681,
       "retrieved_chunks": [
         "05-settlement#1",
         "04-webhooks#2",
         "04-webhooks#5",
-        "08-rate-limits#2",
-        "03-error-codes#3"
+        "03-error-codes#3",
+        "10-sandbox-testing#4"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1673,15 +1682,15 @@
         "04-webhooks",
         "01-platform-overview",
         "02-charges-api",
-        "06-runbook-settlement-stall"
+        "10-sandbox-testing"
       ],
       "confidence": 0.591,
       "retrieved_chunks": [
         "04-webhooks#3",
         "01-platform-overview#2",
         "02-charges-api#4",
-        "04-webhooks#4",
-        "06-runbook-settlement-stall#1"
+        "02-charges-api#3",
+        "10-sandbox-testing#2"
       ],
       "chunk_recall@1": NaN,
       "chunk_recall@3": NaN,
@@ -1696,10 +1705,9 @@
       "abstain_correct": false,
       "citation_support": NaN,
       "answer_ok": null,
-      "answer": "Every event carries the full object and an `object_version` integer. [1] Read the charge count. [5]",
+      "answer": "Every event carries the full object and an `object_version` integer. [1] `charge.captured` can arrive before `charge.authorised`. [1]",
       "citations": [
-        "04-webhooks",
-        "06-runbook-settlement-stall"
+        "04-webhooks"
       ]
     }
   ]

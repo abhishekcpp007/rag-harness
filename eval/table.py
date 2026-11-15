@@ -5,9 +5,13 @@ import json
 import os
 
 HERE = os.path.dirname(__file__)
-ORDER = ["default", "no-rerank", "no-headings", "hybrid", "sparse-only", "hash-only", "hash-hybrid"]
+ORDER = ["default", "no-expansion", "no-rerank", "cross-rerank", "cross-lex", "no-headings",
+         "hybrid", "sparse-only", "hash-only", "hash-hybrid"]
 LABEL = {
-    "default": "default (bge-small, dense, lexical rerank)",
+    "default": "default (bge-small, dense, PRF expansion, lexical rerank)",
+    "no-expansion": "default minus the query expansion",
+    "cross-rerank": "default with a cross encoder instead of the lexical rerank",
+    "cross-lex": "default with the cross encoder rank-fused into the lexical one",
     "no-rerank": "default minus the lexical rerank",
     "no-headings": "default minus the heading path",
     "hybrid": "default plus BM25 fusion",
@@ -18,7 +22,8 @@ LABEL = {
 KINDS = ["identifier", "semantic", "procedural", "factual"]
 # What each row claims its encoder was. A result file that disagrees does not get rendered.
 EXPECT = {
-    "default": "fastembed", "no-rerank": "fastembed", "no-headings": "fastembed",
+    "default": "fastembed", "no-expansion": "fastembed", "cross-rerank": "fastembed",
+    "cross-lex": "fastembed", "no-rerank": "fastembed", "no-headings": "fastembed",
     "hybrid": "fastembed", "sparse-only": "fastembed",
     "hash-only": "hash", "hash-hybrid": "hash",
 }

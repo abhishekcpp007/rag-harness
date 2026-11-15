@@ -5,12 +5,13 @@ whether it actually works.
 
 The service half is ordinary. Chunk the markdown, embed it, retrieve, answer with citations. The
 harness is the half worth reading. Every choice in the retrieval path has a measured number next
-to it, and two of those numbers came out the opposite way from what I expected before running them.
+to it, and four of those numbers came out the opposite way from what I expected before running
+them. Two of the four are the reason the default configuration is what it is.
 
 ```bash
 make install        # uv venv, editable install, fastembed for real embeddings
 make index          # 12 documents -> 54 chunks
-make test           # 35 tests, no network, no model download
+make test           # 50 tests, no network, no model download
 make eval           # 7 configurations over 42 questions
 make tables         # the markdown below, regenerated from eval/results/
 make docker-test    # the same lint and suite inside the image, with no network
@@ -72,36 +73,45 @@ Regenerate with `make eval && make tables`. Every row reindexes from scratch.
 
 | run | chunk recall@1 | chunk recall@3 | chunk MRR | answer ok | citations on target | ms |
 |---|---|---|---|---|---|---|
-| default (bge-small, dense, lexical rerank) | 0.80 | 0.89 | 0.850 | 0.60 | 0.74 | 28 |
-| default minus the lexical rerank | 0.80 | 0.89 | 0.834 | 0.60 | 0.74 | 22 |
-| default minus the heading path | 0.80 | 0.86 | 0.836 | 0.57 | 0.70 | 22 |
-| default plus BM25 fusion | 0.71 | 0.83 | 0.793 | 0.51 | 0.69 | 37 |
-| BM25 alone | 0.66 | 0.83 | 0.739 | 0.51 | 0.66 | 3 |
-| hash embedder, dense only | 0.60 | 0.74 | 0.667 | 0.51 | 0.66 | 3 |
-| hash embedder plus BM25 fusion | 0.66 | 0.83 | 0.739 | 0.54 | 0.66 | 3 |
+| default (bge-small, dense, PRF expansion, lexical rerank) | 0.83 | 0.89 | 0.864 | 0.60 | 0.75 | 10 |
+| default minus the query expansion | 0.80 | 0.89 | 0.850 | 0.60 | 0.74 | 10 |
+| default minus the lexical rerank | 0.77 | 0.89 | 0.820 | 0.60 | 0.76 | 8 |
+| default with a cross encoder instead of the lexical rerank | 0.74 | 0.89 | 0.810 | 0.60 | 0.75 | 734 |
+| default with the cross encoder rank-fused into the lexical one | 0.74 | 0.89 | 0.821 | 0.54 | 0.72 | 739 |
+| default minus the heading path | 0.80 | 0.86 | 0.830 | 0.57 | 0.67 | 11 |
+| default plus BM25 fusion | 0.71 | 0.83 | 0.793 | 0.51 | 0.69 | 10 |
+| BM25 alone | 0.66 | 0.83 | 0.739 | 0.51 | 0.66 | 2 |
+| hash embedder, dense only | 0.60 | 0.71 | 0.670 | 0.51 | 0.64 | 2 |
+| hash embedder plus BM25 fusion | 0.66 | 0.80 | 0.724 | 0.54 | 0.64 | 2 |
 
 Chunk MRR split by question kind:
 
 | run | identifier | semantic | procedural | factual |
 |---|---|---|---|---|
-| default (bge-small, dense, lexical rerank) | 1.00 | 0.56 | 0.84 | 1.00 |
-| default minus the lexical rerank | 1.00 | 0.52 | 0.82 | 1.00 |
-| default minus the heading path | 1.00 | 0.42 | 0.94 | 1.00 |
+| default (bge-small, dense, PRF expansion, lexical rerank) | 1.00 | 0.56 | 0.91 | 1.00 |
+| default minus the query expansion | 1.00 | 0.56 | 0.84 | 1.00 |
+| default minus the lexical rerank | 1.00 | 0.52 | 0.75 | 1.00 |
+| default with a cross encoder instead of the lexical rerank | 0.92 | 0.50 | 0.85 | 0.96 |
+| default with the cross encoder rank-fused into the lexical one | 0.92 | 0.56 | 0.84 | 0.96 |
+| default minus the heading path | 1.00 | 0.39 | 0.94 | 1.00 |
 | default plus BM25 fusion | 1.00 | 0.44 | 0.78 | 0.96 |
 | BM25 alone | 1.00 | 0.34 | 0.67 | 0.96 |
-| hash embedder, dense only | 1.00 | 0.28 | 0.54 | 0.88 |
-| hash embedder plus BM25 fusion | 1.00 | 0.34 | 0.73 | 0.92 |
+| hash embedder, dense only | 1.00 | 0.30 | 0.56 | 0.85 |
+| hash embedder plus BM25 fusion | 1.00 | 0.31 | 0.69 | 0.92 |
 
 Refusal behaviour, at the shipped threshold of 0.34:
 
 | run | refused, cannot be answered | refused, could have been answered |
 |---|---|---|
-| default (bge-small, dense, lexical rerank) | 0.71 | 0.11 |
+| default (bge-small, dense, PRF expansion, lexical rerank) | 0.71 | 0.09 |
+| default minus the query expansion | 0.71 | 0.11 |
 | default minus the lexical rerank | 0.71 | 0.11 |
+| default with a cross encoder instead of the lexical rerank | 0.57 | 0.09 |
+| default with the cross encoder rank-fused into the lexical one | 0.71 | 0.09 |
 | default minus the heading path | 0.71 | 0.09 |
 | default plus BM25 fusion | 0.57 | 0.09 |
 | BM25 alone | 0.57 | 0.09 |
-| hash embedder, dense only | 0.57 | 0.11 |
+| hash embedder, dense only | 0.57 | 0.09 |
 | hash embedder plus BM25 fusion | 0.57 | 0.09 |
 
 The millisecond column is wall clock on a laptop including the embedding call, so treat
@@ -112,9 +122,9 @@ it as an order of magnitude and not a benchmark.
 I built BM25 and reciprocal rank fusion first, because hybrid retrieval is what everybody
 recommends. Then I measured it against plain dense retrieval on the same index.
 
-Fusing BM25 into a `bge-small-en-v1.5` index moved chunk MRR from **0.850 down to 0.793**, and
+Fusing BM25 into a `bge-small-en-v1.5` index moved chunk MRR from **0.864 down to 0.793**, and
 answer quality from 0.60 to 0.51. It lost on semantic questions, 0.56 down to 0.44, and on
-procedural ones, 0.84 down to 0.78. It won nowhere.
+procedural ones, 0.91 down to 0.78. It won nowhere.
 
 The folklore argument for hybrid is identifiers. That argument does not reproduce here. Identifier
 MRR is 1.00 for every configuration in the table, including the deliberately weak hash embedder,
@@ -223,15 +233,75 @@ is called `abstain_confidence`, so every use of that flag raised TypeError, and 
 because nothing in the repo called it. It's `--abstain-confidence` now, with a test that drives it
 through `main()`.
 
+## The query expansion that fixed the wrong category
+
+The worst column in the by-kind table has always been semantic: questions phrased the way a person
+actually asks them. Someone types "what stops a double tap on the pay button from charging twice"
+and the handbook says "idempotency key". The two share no vocabulary, so no amount of reranking
+helps, because the right chunk never makes the candidate list in the first place.
+
+The standard answer to vocabulary mismatch is pseudo-relevance feedback, and it needs no model.
+Retrieve once, take the top few chunks, average their vectors, pull the query vector a little way
+toward that average, retrieve again. One extra matrix multiply against an index that is already
+in memory.
+
+It worked, and then it worked on the wrong category. Chunk MRR went from **0.850 to 0.864** and
+recall@1 from 0.80 to 0.83, but semantic MRR did not move at all, 0.56 before and 0.56 after. The
+whole gain came from procedural questions, **0.84 up to 0.91**. In hindsight that is the obvious
+result: feedback can only amplify a neighbourhood the first pass already found, and on the
+semantic failures the first pass lands in the wrong document entirely. Procedural questions were
+landing in the right document and the wrong chunk, which is exactly the error a centroid fixes.
+
+The gain is not a knob I tuned onto the golden set. Every beta between 0.2 and 0.8 lands chunk MRR
+between 0.857 and 0.871, so the shipped 0.4 sits in the middle of a flat region rather than on a
+peak. Feedback depth mattered more: 3 chunks beat 5 and 8, because the fourth and fifth are
+usually already off topic on a corpus this small.
+
+```bash
+RAG_EXPANSION=none python -m rag.cli ask "how do I replay a failed webhook"
+```
+
+## The cross encoder does not earn its place here
+
+The previous version of this README said a cross encoder "would do better" than the lexical
+rerank and left it unmeasured. That is the kind of claim this repo exists to stop making, so it
+is measured now, across the whole golden set, at three settings.
+
+| reranker | chunk MRR | identifier | semantic | ms |
+|---|---|---|---|---|
+| lexical, the default | 0.864 | 1.00 | 0.56 | 10 |
+| `Xenova/ms-marco-MiniLM-L-6-v2` | 0.810 | 0.92 | 0.50 | 734 |
+| the same model, rank-fused with lexical | 0.821 | 0.92 | 0.56 | 739 |
+| `BAAI/bge-reranker-base` | 0.822 | 1.00 | 0.44 | 5744 |
+
+It loses, and the by-kind split says why. The cross encoder is trained on web passages where
+meaning carries the signal, so it reads `NW-5001` as noise and promotes the prose chunk that
+talks around the error code over the table row that defines it. Identifier MRR drops from 1.00 to
+0.92 and factual from 1.00 to 0.96. Those are the two categories this corpus is mostly made of.
+
+Chaining the two did not rescue it either, and the first attempt is worth recording. Running the
+cross encoder and then applying the lexical bonus to its scores produced an ordering identical to
+the cross encoder alone, byte for byte, because a sigmoid over logits saturates and the gap
+between the top two probabilities is wider than a 40 percent bonus can close. Fusing the two
+*rankings* with RRF does work as a mechanism, and it recovers semantic MRR to 0.56, but it still
+lands below the lexical pass at 70 times the latency.
+
+So `cross` and `cross+lexical` both ship, both off. The code is in `rag/rerank.py` and one
+environment variable turns either on. The table is the argument for leaving them off.
+
 ## Things I measured and then left alone
 
-Light plural stemming was a wash. It lifts citations on target from 0.710 to 0.742 and drops chunk
-MRR from 0.864 to 0.850. It stays in because the lexical reranker and the abstain overlap both
-want `runs` and `run` to be the same token, but it is not carrying the result.
+Light plural stemming was a wash, measured before query expansion went in: it lifted citations on
+target from 0.710 to 0.742 and dropped chunk MRR from 0.864 to 0.850. It stays in because the
+lexical reranker and the abstain overlap both want `runs` and `run` to be the same token, but it
+is not carrying the result.
 
-The lexical reranker is worth 0.016 MRR over no reranker at all. A cross encoder would do better
-and costs a model load plus roughly 40ms a query. On 54 chunks that trade is not worth making, so
-the heavier model is left out until the eval asks for it.
+Two bigger sentence encoders lost to the small one. `BAAI/bge-base-en-v1.5` scored 0.817 chunk MRR
+and `thenlper/gte-base` scored 0.795, against 0.864 for `bge-small-en-v1.5`, on the same index and
+the same questions. bge-base did lift answer quality to 0.63 and citations to 0.74, so the
+headline is not that small is better everywhere, only that four times the parameters bought
+nothing in ranking here. Fifty-four short chunks of terse reference prose is not the regime those
+models are bigger for.
 
 ## Honest limits
 
@@ -277,7 +347,8 @@ rag/
   bm25.py         Okapi BM25 with an explain() for when a ranking looks wrong
   embedding.py    hash | fastembed | openai behind one interface
   store.py        SQLite for text, one numpy matrix for vectors
-  retrieve.py     dense, sparse, reciprocal rank fusion, lexical rerank
+  retrieve.py     dense, sparse, reciprocal rank fusion, PRF query expansion
+  rerank.py       none | lexical | cross encoder | rank fusion of two of them
   confidence.py   the abstain signal, and what had to be thrown away first
   answer.py       context assembly, citation enforcement, refusal
   llm.py          extractive | anthropic | openai
@@ -290,7 +361,7 @@ eval/
   sweep.py        abstain threshold curve
   table.py        the markdown tables above
   results/        committed, so a diff shows a regression
-tests/            35 tests, hash backend, no network
+tests/            50 tests, hash backend, no network
 ```
 
 ## API
@@ -334,7 +405,11 @@ Everything is an environment variable, listed in `.env.example` and typed in `ra
 |---|---|---|
 | `RAG_EMBEDDER` | `fastembed` | `hash` needs no download, `openai` needs a key |
 | `RAG_USE_SPARSE` | `0` | BM25 fusion, see the table above before turning it on |
-| `RAG_RERANK` | `lexical` | or `none` |
+| `RAG_RERANK` | `lexical` | or `none`, `cross`, `cross+lexical`; see the table before paying for a cross encoder |
+| `RAG_RERANK_MODEL` | `Xenova/ms-marco-MiniLM-L-6-v2` | only read when `RAG_RERANK` starts with `cross` |
+| `RAG_EXPANSION` | `prf` | or `none` to switch query expansion off |
+| `RAG_PRF_DOCS` | `3` | how many first pass chunks the feedback vector averages |
+| `RAG_PRF_BETA` | `0.4` | how far the query moves toward them |
 | `RAG_ABSTAIN_CONFIDENCE` | `0.34` | read off `eval/results/abstain-sweep.json` |
 | `RAG_CHUNK_WORDS` | `180` | window, measured in words |
 | `RAG_LLM` | `extractive` | or `anthropic`, or `openai` |
