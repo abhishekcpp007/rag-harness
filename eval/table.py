@@ -20,11 +20,21 @@ LABEL = {
     "hash-hybrid": "hash embedder plus BM25 fusion",
 }
 KINDS = ["identifier", "semantic", "procedural", "factual"]
+# The reranker comparison is its own table in the README, and cross-bge is only in this one: it
+# is a 4 second per question run kept for the argument, not a configuration anyone would ship.
+RERANK_ORDER = ["default", "cross-rerank", "cross-lex", "cross-bge"]
+RERANK_LABEL = {
+    "default": "lexical, the default",
+    "cross-rerank": "`Xenova/ms-marco-MiniLM-L-6-v2`",
+    "cross-lex": "the same model, rank-fused with lexical",
+    "cross-bge": "`BAAI/bge-reranker-base`",
+}
 # What each row claims its encoder was. A result file that disagrees does not get rendered.
 EXPECT = {
     "default": "fastembed", "no-expansion": "fastembed", "cross-rerank": "fastembed",
     "cross-lex": "fastembed", "no-rerank": "fastembed", "no-headings": "fastembed",
     "hybrid": "fastembed", "sparse-only": "fastembed",
+    "cross-bge": "fastembed",
     "hash-only": "hash", "hash-hybrid": "hash",
 }
 
@@ -56,13 +66,15 @@ def main() -> None:
     for n, d in rows:
         check_backend(n, d)
 
-    print("| run | chunk recall@1 | chunk recall@3 | chunk MRR | answer ok | citations on target | ms |")
-    print("|---|---|---|---|---|---|---|")
+    # No latency column. The eval runs each question once, so its millisecond figure is a single
+    # sample with the generator folded in, and two ablations doing identical retrieval work came
+    # out 15ms and 54ms apart on a contended container. Latency is bench/latency.py's job.
+    print("| run | chunk recall@1 | chunk recall@3 | chunk MRR | answer ok | citations on target |")
+    print("|---|---|---|---|---|---|")
     for n, d in rows:
         s = d["summary"]
         print(f"| {LABEL.get(n, n)} | {s['chunk_recall@1']:.2f} | {s['chunk_recall@3']:.2f} "
-              f"| {s['chunk_mrr']:.3f} | {s['answer_ok']:.2f} | {s['citation_support']:.2f} "
-              f"| {s['ms_per_question']:.0f} |")
+              f"| {s['chunk_mrr']:.3f} | {s['answer_ok']:.2f} | {s['citation_support']:.2f} |")
 
     print()
     print("| run | " + " | ".join(KINDS) + " |")
@@ -78,6 +90,24 @@ def main() -> None:
         s = d["summary"]
         print(f"| {LABEL.get(n, n)} | {s['abstained_on_unanswerable']:.2f} "
               f"| {s['abstained_on_answerable']:.2f} |")
+
+    print()
+    rerank_table()
+
+
+def rerank_table() -> None:
+    print("| reranker | chunk MRR | identifier | semantic |")
+    print("|---|---|---|---|")
+    for n in RERANK_ORDER:
+        path = os.path.join(HERE, "results", f"{n}.json")
+        if not os.path.exists(path):
+            continue
+        d = load(n)
+        check_backend(n, d)
+        s = d["summary"]
+        print(f"| {RERANK_LABEL[n]} | {s['chunk_mrr']:.3f} "
+              f"| {d['by_kind']['identifier']['chunk_mrr']:.2f} "
+              f"| {d['by_kind']['semantic']['chunk_mrr']:.2f} |")
 
 
 if __name__ == "__main__":

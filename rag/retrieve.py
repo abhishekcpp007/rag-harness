@@ -15,6 +15,7 @@ opposite and nothing in the code disagreed with it.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from time import perf_counter
 
 import numpy as np
 
@@ -105,22 +106,37 @@ class Retriever:
 
     # ---------- fusion ----------
 
-    def search(self, query: str, k: int | None = None) -> list[Hit]:
+    def search(self, query: str, k: int | None = None, trace: dict | None = None) -> list[Hit]:
+        """`trace`, when given, is filled with the milliseconds each stage took.
+
+        It is an argument rather than an attribute on purpose. The first version kept the last
+        set of timings on the retriever, which two concurrent requests then overwrote for each
+        other, and a timing you cannot trust is worse than no timing.
+        """
         s = self.settings
         k = k or s.final_k
         runs: dict[str, list[tuple[str, float]]] = {}
+        t0 = perf_counter()
         if s.use_dense:
             runs["dense"] = self.dense(query, s.dense_k)
+            if trace is not None:
+                trace["dense_ms"] = round((perf_counter() - t0) * 1000, 2)
+        t1 = perf_counter()
         if s.use_sparse:
             runs["sparse"] = self.sparse(query, s.sparse_k)
+            if trace is not None:
+                trace["sparse_ms"] = round((perf_counter() - t1) * 1000, 2)
 
+        t2 = perf_counter()
         fused = rrf(runs, k=s.rrf_k)
         # The reranker can only fix an ordering it can see, so the pool it gets is wider than
         # the k we return. For the cross encoder that pool is also the per-query cost.
         pool = max(k * 3, k, s.rerank_candidates if s.rerank.startswith("cross") else 0)
+        pooled = fused[:pool]
+        rows = self.store.chunks_by_id(cid for cid, _, _ in pooled)
         hits = []
-        for chunk_id, score, signals in fused[:pool]:
-            row = self.store.chunk(chunk_id)
+        for chunk_id, score, signals in pooled:
+            row = rows.get(chunk_id)
             if row is None:
                 continue
             hits.append(
@@ -134,7 +150,14 @@ class Retriever:
                 )
             )
 
-        return self.reranker.rerank(query, hits)[:k]
+        if trace is not None:
+            trace["fuse_ms"] = round((perf_counter() - t2) * 1000, 2)
+        t3 = perf_counter()
+        out = self.reranker.rerank(query, hits)[:k]
+        if trace is not None:
+            trace["rerank_ms"] = round((perf_counter() - t3) * 1000, 2)
+            trace["candidates"] = len(hits)
+        return out
 
 
 def rrf(runs: dict[str, list[tuple[str, float]]], k: int = 60):

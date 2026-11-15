@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e ".[dev]"
-      - run: ruff check rag eval tests
+      - run: ruff check rag eval tests bench
       - run: pytest -q
       - name: eval on the offline backend
         run: |
@@ -39,7 +39,7 @@ jobs:
       - name: the suite, inside the image, with no network at all
         run: |
           docker build --target test -t rag-harness:test .
-          docker run --rm --network none rag-harness:test ruff check rag eval tests
+          docker run --rm --network none rag-harness:test ruff check rag eval tests bench
           docker run --rm --network none rag-harness:test pytest -q
       - name: the shipped image builds and answers
         run: |
@@ -53,4 +53,13 @@ jobs:
           curl -sf -X POST localhost:8000/answer -H 'content-type: application/json' \
                -d '{"question":"how do I issue a virtual card to an employee"}' \
             | python3 -c "import json,sys; a=json.load(sys.stdin); assert a['abstained'], a"
+          curl -sf localhost:8000/metrics | grep -q rag_index_chunks
+      - name: the shipped image survives concurrent traffic
+        # This step exists because it used to fail. Every request shared one SQLite connection
+        # and 176 of 200 died on a cross-thread error, which no single-threaded test could see.
+        run: |
+          pip install httpx pyyaml
+          python -m bench.load --url http://localhost:8000 -c 16 -n 200
+          python -m bench.load --url http://localhost:8000 --route answer -c 8 -n 80
+          docker logs rag 2>&1 | tail -3
           docker rm -f rag

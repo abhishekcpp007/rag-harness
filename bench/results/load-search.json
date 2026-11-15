@@ -1,0 +1,16 @@
+{
+  "route": "search",
+  "concurrency": 16,
+  "requests": 400,
+  "wall_s": 0.93,
+  "rps": 429.1,
+  "p50_ms": 35.2,
+  "p95_ms": 57.3,
+  "p99_ms": 68.9,
+  "max_ms": 77.2,
+  "status_codes": {
+    "200": 400
+  },
+  "failed": 0,
+  "failures": []
+}

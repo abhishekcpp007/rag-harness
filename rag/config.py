@@ -49,6 +49,14 @@ class Settings:
     prf_docs: int = _int("RAG_PRF_DOCS", 3)
     prf_beta: float = _float("RAG_PRF_BETA", 0.4)
 
+    # service
+    log_format: str = os.getenv("RAG_LOG_FORMAT", "json")  # json | text
+    # Off by default. A rate limiter that is on by default means bench/load.py measures the
+    # limiter rather than the service, and a single tenant service behind a gateway has one
+    # already. Set the rps to switch it on.
+    rate_limit_rps: float = _float("RAG_RATE_LIMIT_RPS", 0.0)
+    rate_limit_burst: int = _int("RAG_RATE_LIMIT_BURST", 20)
+
     # answering
     llm: str = os.getenv("RAG_LLM", "extractive")
     abstain_confidence: float = _float("RAG_ABSTAIN_CONFIDENCE", 0.34)

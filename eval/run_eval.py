@@ -186,6 +186,8 @@ def main(argv=None) -> int:
                    help="which final pass to run, see rag/rerank.py")
     p.add_argument("--expansion", default=None, choices=["none", "prf"],
                    help="pull the query vector toward the first pass centroid before retrieving")
+    p.add_argument("--rerank-model", default=None,
+                   help="only read when --rerank starts with cross")
     p.add_argument("--embedder", default=None)
     p.add_argument("--chunk-words", type=int, default=None)
     p.add_argument("--abstain-confidence", type=float, default=None,
@@ -206,6 +208,8 @@ def main(argv=None) -> int:
         s = s.with_(rerank="none")
     if args.rerank:
         s = s.with_(rerank=args.rerank)
+    if args.rerank_model:
+        s = s.with_(rerank_model=args.rerank_model)
     if args.expansion:
         s = s.with_(expansion=args.expansion)
     if args.embedder:

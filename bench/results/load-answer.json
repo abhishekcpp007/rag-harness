@@ -1,0 +1,16 @@
+{
+  "route": "answer",
+  "concurrency": 16,
+  "requests": 200,
+  "wall_s": 0.58,
+  "rps": 346.7,
+  "p50_ms": 43.2,
+  "p95_ms": 72.6,
+  "p99_ms": 82.0,
+  "max_ms": 84.0,
+  "status_codes": {
+    "200": 200
+  },
+  "failed": 0,
+  "failures": []
+}

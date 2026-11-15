@@ -1,6 +1,6 @@
 {
   "name": "cross-lex",
-  "ran_at": "2026-11-14T19:23:38+00:00",
+  "ran_at": "2026-11-15T06:09:36+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -25,7 +25,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 1.74
+    "seconds": 3.18
   },
   "summary": {
     "answerable_n": 35,
@@ -43,7 +43,7 @@
     "answer_ok": 0.5429,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 738.8
+    "ms_per_question": 2885.5
   },
   "by_kind": {
     "factual": {
@@ -250,7 +250,7 @@
         "10-sandbox-testing",
         "03-error-codes",
         "12-glossary",
-        "05-settlement"
+        "01-platform-overview"
       ],
       "confidence": 0.9167,
       "retrieved_chunks": [
@@ -258,7 +258,7 @@
         "03-error-codes#3",
         "03-error-codes#2",
         "12-glossary#0",
-        "05-settlement#4"
+        "01-platform-overview#2"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -407,16 +407,15 @@
       "retrieved_docs": [
         "04-webhooks",
         "03-error-codes",
-        "06-runbook-settlement-stall",
-        "09-payouts"
+        "06-runbook-settlement-stall"
       ],
       "confidence": 0.3572,
       "retrieved_chunks": [
         "04-webhooks#2",
         "03-error-codes#3",
+        "06-runbook-settlement-stall#2",
         "04-webhooks#5",
-        "06-runbook-settlement-stall#3",
-        "09-payouts#1"
+        "06-runbook-settlement-stall#3"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
@@ -431,10 +430,10 @@
       "abstain_correct": true,
       "citation_support": 0.5,
       "answer_ok": true,
-      "answer": "Deliveries are at least once. [1] A beneficiary is created once and reused. [5]",
+      "answer": "Deliveries are at least once. [1] One message on the status page naming the batch and the expected settlement date. [5]",
       "citations": [
         "04-webhooks",
-        "09-payouts"
+        "06-runbook-settlement-stall"
       ]
     },
     {

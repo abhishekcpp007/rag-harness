@@ -1,6 +1,6 @@
 {
   "name": "no-rerank",
-  "ran_at": "2026-11-14T19:22:33+00:00",
+  "ran_at": "2026-11-15T06:05:17+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -25,7 +25,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 1.61
+    "seconds": 3.51
   },
   "summary": {
     "answerable_n": 35,
@@ -43,7 +43,7 @@
     "answer_ok": 0.6,
     "abstained_on_answerable": 0.1143,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 8.4
+    "ms_per_question": 13.5
   },
   "by_kind": {
     "factual": {
@@ -247,16 +247,16 @@
       "retrieved_docs": [
         "10-sandbox-testing",
         "03-error-codes",
-        "09-payouts",
-        "12-glossary"
+        "12-glossary",
+        "09-payouts"
       ],
       "confidence": 0.9167,
       "retrieved_chunks": [
         "10-sandbox-testing#1",
         "03-error-codes#3",
-        "09-payouts#1",
         "12-glossary#0",
-        "03-error-codes#2"
+        "03-error-codes#2",
+        "09-payouts#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,

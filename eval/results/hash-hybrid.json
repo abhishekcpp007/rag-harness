@@ -1,6 +1,6 @@
 {
   "name": "hash-hybrid",
-  "ran_at": "2026-11-14T19:23:45+00:00",
+  "ran_at": "2026-11-15T06:31:00+00:00",
   "config": {
     "embedder": "hash",
     "embedder_actual": "hash",
@@ -25,7 +25,7 @@
     "chunks": 54,
     "embedder": "hash",
     "dims": 512,
-    "seconds": 0.01
+    "seconds": 0.03
   },
   "summary": {
     "answerable_n": 35,
@@ -43,7 +43,7 @@
     "answer_ok": 0.5429,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.5714,
-    "ms_per_question": 2.5
+    "ms_per_question": 1.5
   },
   "by_kind": {
     "factual": {

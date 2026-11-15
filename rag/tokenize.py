@@ -8,6 +8,7 @@ exact-match traffic on its own, and it is bad at it.
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 
 WORD = re.compile(r"[A-Za-z][A-Za-z0-9_\-]*|\d[\d_\-\.]*")
 SPLIT = re.compile(r"[-_\.]")
@@ -38,16 +39,29 @@ def _stem(w: str) -> str:
     return w
 
 
+# A word expands, gets filtered and gets stemmed without reference to anything around it, so the
+# work for `settlement` is the same work every time `settlement` appears. Indexing a corpus is
+# where that matters: `bench/scale.py` had the build spending most of its time in here, and real
+# prose repeats itself enough that a cache on the raw word turns most of the calls into a lookup.
+_CACHE_SIZE = 1 << 17
+
+
+@lru_cache(maxsize=_CACHE_SIZE)
+def _expand(raw: str, drop_stop: bool) -> tuple[str, ...]:
+    low = raw.lower()
+    out = [low]
+    parts = [p for p in SPLIT.split(low) if p]
+    if len(parts) > 1:
+        out.extend(parts)
+    if CAMEL.search(raw):
+        out.extend(p.lower() for p in CAMEL.split(raw) if p)
+    if drop_stop:
+        out = [t for t in out if t not in STOP]
+    return tuple(_stem(t) for t in out)
+
+
 def tokenize(text: str, *, drop_stop: bool = True) -> list[str]:
     out: list[str] = []
     for raw in WORD.findall(text):
-        low = raw.lower()
-        out.append(low)
-        parts = [p for p in SPLIT.split(low) if p]
-        if len(parts) > 1:
-            out.extend(parts)
-        if CAMEL.search(raw):
-            out.extend(p.lower() for p in CAMEL.split(raw) if p)
-    if drop_stop:
-        out = [t for t in out if t not in STOP]
-    return [_stem(t) for t in out]
+        out.extend(_expand(raw, drop_stop))
+    return out

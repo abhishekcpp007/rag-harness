@@ -20,12 +20,16 @@ FROM base AS test
 
 RUN pip install --no-cache-dir -e ".[dev]"
 COPY tests ./tests
+# The benchmarks are linted in here but never run: the scale sweep wants minutes and the load
+# test wants a running service. hnswlib is imported inside the function that needs it, so the
+# test image does not carry a compiler toolchain for it.
+COPY bench ./bench
 
 # Hash embedder, so the suite needs no model download and no network at all.
 ENV RAG_EMBEDDER=hash \
     RAG_DB_PATH=/tmp/test-index.sqlite3
 
-CMD ["sh", "-c", "ruff check rag eval tests && pytest -q"]
+CMD ["sh", "-c", "ruff check rag eval tests bench && pytest -q"]
 
 FROM base AS runtime
 

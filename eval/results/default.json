@@ -1,6 +1,6 @@
 {
   "name": "default",
-  "ran_at": "2026-11-14T19:24:38+00:00",
+  "ran_at": "2026-11-15T06:05:08+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -25,7 +25,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 1.6
+    "seconds": 5.1
   },
   "summary": {
     "answerable_n": 35,
@@ -43,7 +43,7 @@
     "answer_ok": 0.6,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 10.1
+    "ms_per_question": 15.0
   },
   "by_kind": {
     "factual": {

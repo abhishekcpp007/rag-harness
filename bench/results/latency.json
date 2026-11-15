@@ -1,0 +1,74 @@
+{
+  "queries": 12,
+  "rows": [
+    {
+      "config": "default (lexical rerank, PRF)",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 4.751,
+      "search_p95_ms": 6.23,
+      "answer_p50_ms": 5.143
+    },
+    {
+      "config": "no query expansion",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 4.829,
+      "search_p95_ms": 6.831,
+      "answer_p50_ms": 4.714
+    },
+    {
+      "config": "no rerank",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 4.378,
+      "search_p95_ms": 6.308,
+      "answer_p50_ms": 4.8
+    },
+    {
+      "config": "plus BM25 fusion",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 4.844,
+      "search_p95_ms": 6.457,
+      "answer_p50_ms": 5.366
+    },
+    {
+      "config": "BM25 alone",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 0.315,
+      "search_p95_ms": 0.389,
+      "answer_p50_ms": 0.654
+    },
+    {
+      "config": "hash embedder",
+      "queries": 12,
+      "repeats": 5,
+      "search_p50_ms": 0.347,
+      "search_p95_ms": 0.427,
+      "answer_p50_ms": 0.637
+    },
+    {
+      "config": "cross encoder (ms-marco MiniLM)",
+      "queries": 12,
+      "repeats": 2,
+      "search_p50_ms": 467.408,
+      "search_p95_ms": 554.898
+    },
+    {
+      "config": "cross encoder rank-fused with lexical",
+      "queries": 12,
+      "repeats": 2,
+      "search_p50_ms": 413.662,
+      "search_p95_ms": 486.548
+    },
+    {
+      "config": "cross encoder (bge-reranker-base)",
+      "queries": 12,
+      "repeats": 2,
+      "search_p50_ms": 3670.059,
+      "search_p95_ms": 4396.609
+    }
+  ]
+}

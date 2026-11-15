@@ -1,8 +1,8 @@
-.PHONY: install index test lint eval sweep tables serve docker docker-test clean
+.PHONY: install index test lint eval sweep tables serve bench latency load docker docker-test clean
 
 install:
 	uv venv --python 3.12 .venv || python3 -m venv .venv
-	.venv/bin/pip install -e ".[dev,embed]"
+	.venv/bin/pip install -e ".[dev,embed,bench]"
 
 index:
 	.venv/bin/python -m rag.cli ingest
@@ -11,19 +11,10 @@ test:
 	.venv/bin/python -m pytest -q
 
 lint:
-	.venv/bin/ruff check rag eval tests
+	.venv/bin/ruff check rag eval tests bench
 
 eval:
-	.venv/bin/python -m eval.run_eval --name default
-	.venv/bin/python -m eval.run_eval --name no-expansion --expansion none
-	.venv/bin/python -m eval.run_eval --name no-rerank --no-rerank
-	.venv/bin/python -m eval.run_eval --name cross-rerank --rerank cross
-	.venv/bin/python -m eval.run_eval --name cross-lex --rerank cross+lexical
-	.venv/bin/python -m eval.run_eval --name no-headings --no-headings
-	.venv/bin/python -m eval.run_eval --name hybrid --with-sparse
-	.venv/bin/python -m eval.run_eval --name sparse-only --no-dense --with-sparse
-	.venv/bin/python -m eval.run_eval --name hash-only --embedder hash
-	.venv/bin/python -m eval.run_eval --name hash-hybrid --embedder hash --with-sparse
+	PY=.venv/bin/python sh eval/run_all.sh
 
 sweep:
 	.venv/bin/python -m eval.sweep
@@ -34,6 +25,21 @@ tables:
 serve:
 	.venv/bin/python -m rag.cli serve
 
+# Where each index stops working. Takes a few minutes: it builds an approximate index at every
+# size on both vector geometries so the recall it gives up is a measurement too.
+bench:
+	.venv/bin/python -m bench.scale --sizes 1000,10000,50000 --dense-max 250000
+
+# Per-query latency for each retrieval configuration. Slow, because the cross encoders are in it.
+latency:
+	.venv/bin/python -m bench.latency
+
+# Needs the service up in another shell. Exits non-zero if any request failed, which is the
+# point: this is what found the shared SQLite connection.
+load:
+	.venv/bin/python -m bench.load -c 16 -n 400 --out bench/results/load-search.json
+	.venv/bin/python -m bench.load --route answer -c 16 -n 200 --out bench/results/load-answer.json
+
 docker:
 	docker compose up --build
 
@@ -41,7 +47,7 @@ docker:
 # really do not touch one.
 docker-test:
 	docker build --target test -t rag-harness:test .
-	docker run --rm --network none rag-harness:test ruff check rag eval tests
+	docker run --rm --network none rag-harness:test ruff check rag eval tests bench
 	docker run --rm --network none rag-harness:test pytest -q
 
 clean:

@@ -1,6 +1,6 @@
 {
   "name": "no-headings",
-  "ran_at": "2026-11-14T19:23:41+00:00",
+  "ran_at": "2026-11-15T06:30:44+00:00",
   "config": {
     "embedder": "fastembed",
     "embedder_actual": "fastembed:BAAI/bge-small-en-v1.5",
@@ -25,7 +25,7 @@
     "chunks": 54,
     "embedder": "fastembed:BAAI/bge-small-en-v1.5",
     "dims": 384,
-    "seconds": 1.6
+    "seconds": 3.93
   },
   "summary": {
     "answerable_n": 35,
@@ -43,7 +43,7 @@
     "answer_ok": 0.5714,
     "abstained_on_answerable": 0.0857,
     "abstained_on_unanswerable": 0.7143,
-    "ms_per_question": 10.6
+    "ms_per_question": 53.8
   },
   "by_kind": {
     "factual": {
@@ -366,15 +366,16 @@
       ],
       "retrieved_docs": [
         "09-payouts",
-        "07-refunds-and-disputes"
+        "07-refunds-and-disputes",
+        "12-glossary"
       ],
       "confidence": 0.6346,
       "retrieved_chunks": [
         "09-payouts#3",
         "09-payouts#0",
         "07-refunds-and-disputes#0",
-        "09-payouts#1",
-        "09-payouts#4"
+        "12-glossary#0",
+        "09-payouts#1"
       ],
       "chunk_recall@1": 1.0,
       "chunk_recall@3": 1.0,
