@@ -17,3 +17,4 @@ $PY -m eval.run_eval --name sparse-only --no-dense --with-sparse
 $PY -m eval.run_eval --name hash-only --embedder hash
 $PY -m eval.run_eval --name hash-hybrid --embedder hash --with-sparse
 $PY -m eval.sweep
+$PY -m eval.significance

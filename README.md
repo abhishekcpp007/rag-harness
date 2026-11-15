@@ -6,18 +6,26 @@ whether it actually works.
 The service half is ordinary. Chunk the markdown, embed it, retrieve, answer with citations. The
 harness is the half worth reading. Every choice in the retrieval path has a measured number next
 to it, and the ones worth your time are the ones that came out the opposite way from what I
-expected before running them. Two of those are the reason the default configuration is what it is.
+expected before running them.
 
-There are two other benchmarks in here beside the quality one. `bench/scale.py` sweeps corpus
-size to find where each index stops working, and the answer was not the index I expected. And
-`bench/load.py` points concurrent clients at the running service, which is how three bugs that a
-green test suite cannot see got found.
+Those numbers now carry bootstrap intervals, and the intervals took several of my own findings
+away. Thirty-five answerable questions resolve differences of about 0.1 in chunk MRR and nothing
+finer, so a gap of 0.014 that I had written a section about turns out to be one question out of
+35. That section is still here with the correction in it, because a harness that only reports the
+results it likes is not a harness. What survived is in **How much of this is real**, which is the
+first thing to read.
+
+Two other benchmarks live beside the quality one, and they are not sample-limited in the same way.
+`bench/scale.py` sweeps corpus size to find where each index stops working, and the answer was not
+the index I expected. `bench/load.py` points concurrent clients at the running service, which is
+how three bugs a green test suite cannot see got found.
 
 ```bash
 make install        # uv venv, editable install, fastembed for real embeddings
 make index          # 12 documents -> 54 chunks
-make test           # 127 tests, no network, no model download
-make eval           # 11 configurations over 42 questions
+make test           # 141 tests, no network, no model download
+make eval           # 11 configurations over 42 questions, then the significance pass
+make significance   # bootstrap intervals and the paired tests that demote half the findings
 make tables         # the markdown below, regenerated from eval/results/
 make docker-test    # the same lint and suite inside the image, with no network
 make bench          # where each index stops working, sparse and dense, sizes to 250k
@@ -128,23 +136,118 @@ folded in. Two ablations that do an identical amount of retrieval work came out 
 apart on a contended container, which is a number noisy enough to make the ranking figures next to
 it look less trustworthy than they are. Latency gets its own benchmark, further down.
 
-## Hybrid retrieval lost, and that is the point
+## How much of this is real
+
+Everything above is a point estimate over 35 answerable questions. One question slipping from
+rank 1 to rank 2 moves chunk MRR by 0.014, which is larger than some of the gaps the sections
+below used to argue about, so `eval/significance.py` puts an interval on every number and a
+paired test on every comparison. Percentile bootstrap, 10,000 resamples, and the comparisons
+against the default get a Holm adjustment because nine configurations against one default is
+nine chances at a winner by luck.
+
+| run | chunk_mrr | chunk_recall@1 | mrr | citation_support | answer_ok | abstained |
+|---|---|---|---|---|---|---|
+| default (bge-small, dense, PRF expansion, lexical rerank) | 0.864 [0.75, 0.96] | 0.829 [0.69, 0.94] | 0.905 [0.82, 0.97] | 0.750 [0.64, 0.84] | 0.600 [0.43, 0.74] | 0.714 [0.43, 1.00] |
+| default minus the query expansion | 0.850 [0.74, 0.94] | 0.800 [0.66, 0.91] | 0.881 [0.78, 0.97] | 0.742 [0.65, 0.84] | 0.600 [0.43, 0.74] | 0.714 [0.43, 1.00] |
+| default minus the lexical rerank | 0.820 [0.70, 0.93] | 0.771 [0.63, 0.91] | 0.890 [0.79, 0.97] | 0.758 [0.66, 0.85] | 0.600 [0.43, 0.74] | 0.714 [0.43, 1.00] |
+| default with a cross encoder instead of the lexical rerank | 0.810 [0.69, 0.92] | 0.743 [0.60, 0.89] | 0.869 [0.77, 0.95] | 0.750 [0.64, 0.84] | 0.600 [0.43, 0.74] | 0.571 [0.14, 0.86] |
+| default with the cross encoder rank-fused into the lexical one | 0.821 [0.71, 0.92] | 0.743 [0.60, 0.89] | 0.874 [0.79, 0.95] | 0.719 [0.61, 0.83] | 0.543 [0.37, 0.71] | 0.714 [0.43, 1.00] |
+| default minus the heading path | 0.830 [0.70, 0.94] | 0.800 [0.66, 0.91] | 0.886 [0.79, 0.97] | 0.672 [0.56, 0.78] | 0.571 [0.40, 0.74] | 0.714 [0.43, 1.00] |
+| default plus BM25 fusion | 0.793 [0.67, 0.90] | 0.714 [0.57, 0.86] | 0.821 [0.71, 0.92] | 0.688 [0.58, 0.80] | 0.514 [0.34, 0.69] | 0.571 [0.14, 0.86] |
+| BM25 alone | 0.739 [0.61, 0.86] | 0.657 [0.49, 0.80] | 0.772 [0.64, 0.89] | 0.656 [0.53, 0.78] | 0.514 [0.34, 0.69] | 0.571 [0.14, 0.86] |
+| hash embedder, dense only | 0.670 [0.52, 0.81] | 0.600 [0.43, 0.77] | 0.759 [0.63, 0.87] | 0.641 [0.52, 0.77] | 0.514 [0.34, 0.69] | 0.571 [0.14, 0.86] |
+| hash embedder plus BM25 fusion | 0.724 [0.59, 0.85] | 0.657 [0.49, 0.80] | 0.776 [0.64, 0.90] | 0.641 [0.52, 0.77] | 0.543 [0.37, 0.71] | 0.571 [0.14, 0.86] |
+
+Those intervals overlap almost everybody with almost everybody, which is what 35 questions buys.
+The `abstained` column is worse: it is seven questions, so 0.714 means five of seven and the
+interval runs from 0.43 to 1.00. Marginal intervals are also the wrong tool for a comparison,
+because the questions are shared and the hard ones are hard for every configuration. Pairing
+cancels that, and it is the column that decides what this repo is allowed to claim.
+
+| run | delta vs default | 95% interval | questions that move | p | p after Holm | real |
+|---|---|---|---|---|---|---|
+| hash embedder, dense only | -0.1943 | [-0.316, -0.086] | 12/35 | 0.000 | 0.002 | yes |
+| hash embedder plus BM25 fusion | -0.1405 | [-0.260, -0.036] | 10/35 | 0.005 | 0.040 | yes |
+| BM25 alone | -0.1252 | [-0.232, -0.031] | 10/35 | 0.007 | 0.049 | yes |
+| default plus BM25 fusion | -0.0714 | [-0.150, -0.007] | 8/35 | 0.032 | 0.194 | not shown |
+| default with a cross encoder instead of the lexical rerank | -0.0538 | [-0.117, +0.001] | 7/35 | 0.053 | 0.263 | not shown |
+| default minus the lexical rerank | -0.0443 | [-0.129, +0.032] | 7/35 | 0.275 | 0.616 | not shown |
+| default with the cross encoder rank-fused into the lexical one | -0.0433 | [-0.097, +0.001] | 6/35 | 0.059 | 0.263 | not shown |
+| default minus the heading path | -0.0348 | [-0.097, +0.009] | 4/35 | 0.205 | 0.616 | not shown |
+| default minus the query expansion | -0.0143 | [-0.043, +0.000] | 1/35 | 0.738 | 0.738 | not shown |
+
+The `questions that move` column is there because this statistic has a lump of probability sitting
+exactly on zero, and without that column the last row reads as broken. Query expansion changes the
+retrieved order on one question out of 35. Most bootstrap resamples miss that question entirely,
+their mean difference is exactly 0, those resamples count on both sides of a two-sided test, and
+the p value comes out at 0.738 next to an interval whose edge is a hair under zero. Both numbers
+are saying the same thing in different dialects: there is one question in it.
+
+Two comparisons were decided before the numbers were looked at and are not part of that family,
+so they are one test each:
+
+| comparison | what it asks | delta | 95% interval | questions that move | p |
+|---|---|---|---|---|---|
+| hash-hybrid vs hash-only | does BM25 fusion rescue a weak encoder | +0.0538 | [+0.011, +0.107] | 5/35 | 0.010 |
+| cross-lex vs cross-rerank | does rank fusion beat the cross encoder alone | +0.0105 | [-0.011, +0.041] | 4/35 | 0.459 |
+
+And the by-kind table, which is where the samples get genuinely thin:
+
+| kind | n | chunk MRR | 95% interval |
+|---|---|---|---|
+| identifier | 6 | 1.000 | [1.00, 1.00] |
+| semantic | 9 | 0.556 | [0.28, 0.83] |
+| procedural | 8 | 0.906 | [0.72, 1.00] |
+| factual | 12 | 1.000 | [1.00, 1.00] |
+
+The identifier and factual rows have zero width because every one of those questions scores
+exactly 1.0, so there is nothing for a bootstrap to resample. That is not certainty, it is the
+absence of information: the real question is whether an identifier question outside this set would
+also land at 1.0, and resampling six questions I wrote cannot answer that. Semantic runs from 0.28
+to 0.83 on nine questions, which says the semantic weakness is real in direction and unmeasured in
+size.
+
+**So what survives.** The encoder matters: the hash backend is genuinely worse, and that is the
+largest and clearest effect in the repo. BM25 alone is genuinely worse than dense with a rerank.
+And BM25 fusion genuinely helps the weak encoder, which was a pre-specified question and came back
+at p 0.010.
+
+**What does not.** Everything in the 0.01 to 0.07 band, which is most of what the sections below
+spent their paragraphs on. Hybrid fusion hurting a strong encoder has the right sign and an
+unadjusted interval that excludes zero, and it does not clear a family-wide bar. The cross encoder
+being worse at ranking is not shown. The lexical rerank helping is not shown. The heading path
+helping is not shown. Query expansion is one question.
+
+None of the defaults change, because every one of them is still the best point estimate and
+nothing is shown to beat them. What changes is the wording. I had been writing "measured" where
+the honest word was "measured, and the measurement cannot tell these apart". The fix is not a
+better test, it is more questions, and that is the next piece of work rather than something to
+argue around. Everything in this section regenerates with `make significance`, and because the
+resampling is seeded the output is byte identical on a macOS host and inside the Linux container,
+which is the one number in this README that does not move between the two.
+
+## Hybrid retrieval did not help, and one half of that is solid
 
 I built BM25 and reciprocal rank fusion first, because hybrid retrieval is what everybody
 recommends. Then I measured it against plain dense retrieval on the same index.
 
-Fusing BM25 into a `bge-small-en-v1.5` index moved chunk MRR from **0.864 down to 0.793**, and
-answer quality from 0.60 to 0.51. It lost on semantic questions, 0.56 down to 0.44, and on
-procedural ones, 0.91 down to 0.78. It won nowhere.
+Fusing BM25 into a `bge-small-en-v1.5` index moved chunk MRR from 0.864 down to **0.793**, and
+answer quality from 0.60 to 0.51. It won nowhere. The paired test says the sign is right and the
+size is not established: delta -0.071 on eight of 35 questions, an unadjusted interval of
+[-0.150, -0.007] that excludes zero, and 0.194 once nine comparisons are accounted for. So the
+claim here is that hybrid did not help, not that it provably hurt.
 
-The folklore argument for hybrid is identifiers. That argument does not reproduce here. Identifier
-MRR is 1.00 for every configuration in the table, including the deliberately weak hash embedder,
-because `NW-4021` survives subword tokenisation well enough that a dense encoder has no trouble
-with it.
+The other half is solid. With the hash embedder, adding BM25 moves chunk MRR from 0.670 up to
+**0.724**, and that was a question I wrote down before running it rather than one I went looking
+for afterwards: delta +0.054, interval [+0.011, +0.107], p 0.010. BM25 rescues a weak encoder and
+gets in a good one's way, which is the useful version of the folklore rather than the folklore.
 
-So BM25 is off by default. It earns its place when the encoder is weak, and the table shows exactly
-that: with the hash embedder, adding BM25 moves MRR from **0.667 up to 0.739**. One flag turns it
-back on.
+What the folklore gets wrong here is identifiers. Identifier MRR is 1.00 for every configuration
+in the table, the deliberately weak hash embedder included, because `NW-4021` survives subword
+tokenisation well enough that a dense encoder has no trouble with it. Six identifier questions is
+too few to call that settled, and it points the opposite way from the usual argument for hybrid.
+
+So BM25 is off by default and one flag turns it back on.
 
 ```bash
 RAG_USE_SPARSE=1 python -m rag.cli search "NW-4021"
@@ -217,7 +320,9 @@ holds it there.
 columns, and the sentence splitter worked per line, so answers came out as "refused every time it
 was asked. [2]" with the subject stranded on the line above. Unwrapping paragraphs before splitting
 moved answer quality from **0.486 to 0.600** on its own, measured by reverting just that change.
-It is the single largest improvement in the project and it is not a retrieval change at all.
+It is the single largest improvement in the project and it is not a retrieval change at all. It is
+also the only number in this section, and at 0.114 it is about four questions out of 35, which
+puts it above the resolution of this golden set rather than inside it.
 
 **An eval run reported zeros instead of failing.** After BM25 moved to off by default, the
 `--no-dense` ablation left no retriever running at all. The run finished, wrote a result file, and
@@ -244,7 +349,10 @@ is called `abstain_confidence`, so every use of that flag raised TypeError, and 
 because nothing in the repo called it. It's `--abstain-confidence` now, with a test that drives it
 through `main()`.
 
-## The query expansion that fixed the wrong category
+## The query expansion that turned out to be one question
+
+This section used to be a finding. The bootstrap demoted it, and the demotion is more interesting
+than the finding was.
 
 The worst column in the by-kind table has always been semantic: questions phrased the way a person
 actually asks them. Someone types "what stops a double tap on the pay button from charging twice"
@@ -253,30 +361,34 @@ helps, because the right chunk never makes the candidate list in the first place
 
 The standard answer to vocabulary mismatch is pseudo-relevance feedback, and it needs no model.
 Retrieve once, take the top few chunks, average their vectors, pull the query vector a little way
-toward that average, retrieve again. One extra matrix multiply against an index that is already
-in memory.
+toward that average, retrieve again. One extra matrix multiply against an index already in memory,
+0.1ms, and `bench/latency.py` cannot separate it from not doing it at all.
 
-It worked, and then it worked on the wrong category. Chunk MRR went from **0.850 to 0.864** and
-recall@1 from 0.80 to 0.83, but semantic MRR did not move at all, 0.56 before and 0.56 after. The
-whole gain came from procedural questions, **0.84 up to 0.91**. In hindsight that is the obvious
-result: feedback can only amplify a neighbourhood the first pass already found, and on the
-semantic failures the first pass lands in the wrong document entirely. Procedural questions were
-landing in the right document and the wrong chunk, which is exactly the error a centroid fixes.
+Chunk MRR goes from 0.850 to **0.864** and recall@1 from 0.80 to 0.83. Semantic MRR does not move,
+0.56 either way. The whole lift is in the procedural column, 0.84 up to 0.91, and I wrote a
+paragraph here explaining the mechanism: feedback can only sharpen a neighbourhood the first pass
+already found, so it fixes right-document-wrong-chunk and cannot fix landing in the wrong document.
 
-The gain is not a knob I tuned onto the golden set. Every beta between 0.2 and 0.8 lands chunk MRR
-between 0.857 and 0.871, so the shipped 0.4 sits in the middle of a flat region rather than on a
-peak. Feedback depth mattered more: 3 chunks beat 5 and 8, because the fourth and fifth are
-usually already off topic on a corpus this small.
+That mechanism story is probably still true. It is also, on this golden set, **one question**. The
+paired test puts the delta at -0.014 with one of 35 questions retrieving differently, and the
+procedural lift from 0.84 to 0.91 is one question in a column of eight moving from rank 2 to rank
+1. Eight questions cannot support a mechanism and neither can one.
+
+So it ships on, and the reason is not the number. It costs nothing measurable, it has a flat
+response across beta from 0.2 to 0.8 so it is not tuned onto this set, and the direction agrees
+with how the thing is supposed to work. Those are reasons to keep a free component, not evidence
+that it helps. Finding out properly needs a few hundred procedural questions, which is a different
+piece of work.
 
 ```bash
 RAG_EXPANSION=none python -m rag.cli ask "how do I replay a failed webhook"
 ```
 
-## The cross encoder does not earn its place here
+## The cross encoder does not earn its place here, and the reason is the clock
 
 The previous version of this README said a cross encoder "would do better" than the lexical
 rerank and left it unmeasured. That is the kind of claim this repo exists to stop making, so it
-is measured now, across the whole golden set, at three settings.
+is measured now, across the whole golden set, at four settings.
 
 | reranker | chunk MRR | identifier | semantic |
 |---|---|---|---|
@@ -285,18 +397,30 @@ is measured now, across the whole golden set, at three settings.
 | the same model, rank-fused with lexical | 0.821 | 0.92 | 0.56 |
 | `BAAI/bge-reranker-base` | 0.822 | 1.00 | 0.44 |
 
-It loses, and the by-kind split says why. The cross encoder is trained on web passages where
-meaning carries the signal, so it reads `NW-5001` as noise and promotes the prose chunk that
-talks around the error code over the table row that defines it. Identifier MRR drops from 1.00 to
-0.92 and factual from 1.00 to 0.96. Those are the two categories this corpus is mostly made of.
+On ranking it loses, and here is where the intervals matter: it loses by -0.054 with an interval
+of [-0.117, +0.001] on seven of 35 questions, so the ranking loss is the right sign and is **not
+established**. If the argument for leaving it off rested on that number alone, the argument would
+be too weak to make.
+
+It does not rest on that number. The cost is 467ms against 4.75ms, measured over repeats rather
+than once, so the cross encoder has to win clearly to be worth 98 times the latency and the most
+the data supports is that it might be a little worse. An unproven loss at a hundred times the
+price is an easy call.
+
+The by-kind split says what the mechanism probably is. The cross encoder is trained on web
+passages where meaning carries the signal, so it reads `NW-5001` as noise and promotes the prose
+chunk that talks around the error code over the table row that defines it. Identifier MRR drops
+from 1.00 to 0.92 and factual from 1.00 to 0.96, and those are the two categories this corpus is
+mostly made of. Six identifier questions and twelve factual ones, so read that as the shape of
+the failure rather than its size.
 
 Chaining the two did not rescue it either, and the first attempt is worth recording. Running the
 cross encoder and then applying the lexical bonus to its scores produced an ordering identical to
 the cross encoder alone, byte for byte, because a sigmoid over logits saturates and the gap
 between the top two probabilities is wider than a 40 percent bonus can close. Fusing the two
-*rankings* with RRF does work as a mechanism, and it recovers semantic MRR to 0.56, but it still
-lands below the lexical pass at 87 times the latency, which the table two sections down prices
-properly.
+*rankings* with RRF does work as a mechanism, and on this set it buys +0.011 over the cross
+encoder alone with a p of 0.459, which is to say nothing at all. It still lands below the lexical
+pass at 87 times the latency.
 
 So `cross` and `cross+lexical` both ship, both off. The code is in `rag/rerank.py` and one
 environment variable turns either on. The table is the argument for leaving them off.
@@ -470,10 +594,12 @@ is not carrying the result.
 
 Two bigger sentence encoders lost to the small one. `BAAI/bge-base-en-v1.5` scored 0.817 chunk MRR
 and `thenlper/gte-base` scored 0.795, against 0.864 for `bge-small-en-v1.5`, on the same index and
-the same questions. bge-base did lift answer quality to 0.63 and citations to 0.74, so the
-headline is not that small is better everywhere, only that four times the parameters bought
-nothing in ranking here. Fifty-four short chunks of terse reference prose is not the regime those
-models are bigger for.
+the same questions. Those gaps are 0.047 and 0.069, which is the same band the section above
+could not establish, so take them as a reason not to pay for a bigger model here rather than as
+evidence that small wins. bge-base did lift answer quality to 0.63 and citations to 0.74. Neither
+run is committed under `eval/results/`, because neither is in `eval/run_all.sh`, so these two
+numbers are the least reproducible in this README and I would rather say that than quietly leave
+them in a table.
 
 ## Honest limits
 
@@ -501,7 +627,16 @@ publish numbers I cannot regenerate on a clean checkout.
 The abstain threshold was read off a curve computed on this same golden set. That makes the
 refusal numbers an upper bound, not a prediction about a fresh corpus. With 42 questions a held out
 split would be too small to mean anything, so I would rather state the bias than hide it behind a
-80/20 line.
+80/20 line. The refusal rate is also the thinnest number here by a distance: seven unanswerable
+questions, so 0.714 is five of seven and the interval runs [0.43, 1.00].
+
+The golden set is the binding limit on everything in the first half of this README, and now it has
+a number. Thirty-five answerable questions resolve differences of about 0.1 in chunk MRR and
+nothing smaller, so every design choice whose effect is in the 0.01 to 0.07 band is a point
+estimate here and will stay one until the set is bigger. The next piece of work is a larger set,
+and a public one: labels somebody else wrote, so the numbers can sit next to published baselines
+instead of only next to each other. Until then the honest summary is that the engineering is
+measured and most of the retrieval-quality differences are not resolved.
 
 The vector store is one float32 matrix held in memory with the text in SQLite. `bench/scale.py`
 says that is one BLAS call and 12.8ms at 250,000 chunks against 384MB of RAM, so the limit is
@@ -546,10 +681,12 @@ eval/
   metrics.py      recall@k, MRR, nDCG, citation support
   run_eval.py     one config in, one result file out
   run_all.sh      the ablation list, shared by make eval and the container run
+  stats.py        percentile bootstrap, paired delta, Holm adjustment
+  significance.py which differences survive, and which were one question all along
   sweep.py        abstain threshold curve
   table.py        the markdown tables above
   results/        committed, so a diff shows a regression
-tests/            127 tests, hash backend, no network. 42 of them are the BM25 parity check
+tests/            141 tests, hash backend, no network. 42 of them are the BM25 parity check
                   running over every golden question
 ```
 
@@ -579,7 +716,7 @@ the network, and serves on 8000.
 
 ```bash
 docker build --target test -t rag-harness:test .
-docker run --rm --network none rag-harness:test    # ruff, then 127 tests
+docker run --rm --network none rag-harness:test    # ruff, then 141 tests
 ```
 
 The test stage carries the dev dependencies and the suite. The image you ship carries neither, and

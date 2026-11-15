@@ -1,4 +1,4 @@
-.PHONY: install index test lint eval sweep tables serve bench latency load docker docker-test clean
+.PHONY: install index test lint eval sweep tables significance serve bench latency load docker docker-test clean
 
 install:
 	uv venv --python 3.12 .venv || python3 -m venv .venv
@@ -21,6 +21,11 @@ sweep:
 
 tables:
 	.venv/bin/python -m eval.table
+
+# Bootstrap intervals and the paired tests. This is the file that decides which differences in
+# the README are allowed to be called findings.
+significance:
+	.venv/bin/python -m eval.significance
 
 serve:
 	.venv/bin/python -m rag.cli serve
